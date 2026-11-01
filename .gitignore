@@ -1,0 +1,11 @@
+# OpenAI Sites project metadata is local to the alternative deployment.
+.openai/
+
+# Temporary deployment archives.
+*.tar.gz
+
+# Local editor and operating-system files.
+.DS_Store
+Thumbs.db
+.vscode/
+
