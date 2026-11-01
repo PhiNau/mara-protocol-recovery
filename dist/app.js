@@ -1,5 +1,119 @@
 const STORAGE_KEY = "mara_protocol_recovery_v1";
 
+const prologueScenes = [
+  {
+    kicker: "21:47 Uhr · Techniklabor",
+    title: "Der Abend, an dem M.A.R.A. verschwand",
+    text: "Eigentlich sollte der mobile Assistenzroboter nur einen neuen Netzwerkmodus testen. Dann flackern die Monitore, die Labortür öffnet sich – und M.A.R.A. rollt ohne Freigabe hinaus in die Nacht.",
+    transmission: "SYSTEMLOG // Verbindung zu M.A.R.A. verloren · letzter Zustand: UPDATE_PENDING",
+    art: "lab",
+  },
+  {
+    kicker: "22:03 Uhr · Außerhalb des Campus",
+    title: "Die Maschine folgt einem fremden Takt",
+    text: "Eine Überwachungskamera erfasst M.A.R.A. am Rand des Stadtwalds. Ihre Sensoren funktionieren, doch auf normale Steuerbefehle reagiert sie nicht. Irgendetwas hat ihre Kommunikationsregeln verändert.",
+    transmission: "KAMERA 04 // Ziel erkannt · Bewegungsrichtung: Relaisstation Nord · Reaktion auf Rückruf: keine",
+    art: "forest",
+  },
+  {
+    kicker: "22:11 Uhr · Netzwerk-Leitstelle",
+    title: "Im Rauschen steckt eine Sprache",
+    text: "TEAM7 fängt kurze Datenbursts auf. Wiederkehrende Wörter, Doppelpunkte und Antworten deuten auf ein Protokoll hin. Wer seine Regeln versteht, kann vielleicht wieder mit M.A.R.A. sprechen.",
+    transmission: "MITSCHNITT 07 // … HELLO:??? … ERR:LOGIN_REQUIRED … STATUS:RUNAWAY …",
+    art: "signal",
+  },
+  {
+    kicker: "22:16 Uhr · Einsatzfreigabe",
+    title: "Protocol Recovery beginnt",
+    text: "Eure Aufgabe: Rekonstruiert zuerst M.A.R.A.s Sprache. Repariert danach den Transportweg durch die Netzwerkschichten und übersetzt die Ergebnisse für das OSI-Laborprotokoll.",
+    transmission: "MISSIONSZIEL // Kontakt herstellen · sicheren Modus aktivieren · Rückkehr zum Labor auslösen",
+    art: "map",
+  },
+];
+
+const lessons = {
+  trace: {
+    title: "Wie Protokolle Nachrichten lesbar machen",
+    intro: "Computer können nur zusammenarbeiten, wenn beide Seiten denselben Aufbau erwarten. Diese formalen Regeln nennt man Syntax.",
+    points: ["Schlüsselwörter bezeichnen mögliche Aktionen.", "Trennzeichen grenzen Bestandteile eindeutig voneinander ab.", "Nutzdaten konkretisieren einen Befehl, etwa einen Namen oder Modus."],
+    kind: "grammar",
+  },
+  dialogue: {
+    title: "Anfrage, Antwort und Gesprächszustand",
+    intro: "Ein Protokoll ist mehr als ein Nachrichtenformat. Es legt auch fest, wer beginnt und welche Nachricht in welcher Phase erlaubt ist.",
+    points: ["Der Client stellt eine Anfrage; der Server reagiert darauf.", "Eine Begrüßung kann eine Sitzung eröffnen.", "Dieselbe Nachricht kann je nach aktuellem Zustand gültig oder ungültig sein."],
+    kind: "handshake",
+  },
+  errors: {
+    title: "Fehler sind Teil des Protokolls",
+    intro: "Gute Protokolle definieren eindeutige Antworten auf unvollständige, unbekannte oder verfrühte Nachrichten.",
+    points: ["Syntaxfehler: Der Aufbau ist unvollständig.", "Semantikfehler: Der Befehl ist unbekannt oder unpassend.", "Zustandsfehler: Die Nachricht kommt in der falschen Gesprächsphase."],
+    kind: "errors",
+  },
+  recall: {
+    title: "Eine Sitzung gezielt steuern",
+    intro: "Komplexe Aktionen entstehen oft aus mehreren kleinen, bestätigten Schritten. Der nächste Schritt darf erst erfolgen, wenn sein notwendiger Zustand erreicht ist.",
+    points: ["Antworten liefern Hinweise auf den aktuellen Zustand.", "Sicherheitskritische Aktionen benötigen Voraussetzungen.", "Ein sauberer Abschluss beendet die Sitzung eindeutig."],
+    kind: "states",
+  },
+  stack: {
+    title: "Arbeitsteilung im TCP/IP-Modell",
+    intro: "Netzwerkkommunikation wird in Schichten zerlegt. Jede Schicht löst eine andere Teilaufgabe und bietet der darüberliegenden Schicht einen Dienst an.",
+    points: ["Oben entstehen anwendungsspezifische Nachrichten.", "In der Mitte werden Programme und Rechner adressiert.", "Unten erfolgt die konkrete Übertragung im lokalen Netz."],
+    kind: "stack",
+  },
+  encapsulation: {
+    title: "Kapselung: Eine Nachricht wird reisefertig",
+    intro: "Beim Senden ergänzt jede Schicht eigene Steuerinformationen. So entsteht aus Anwendungsdaten schrittweise eine übertragbare Einheit.",
+    points: ["Die ursprüngliche Nachricht bleibt im Inneren erhalten.", "Jeder Header ist für eine bestimmte Schicht bestimmt.", "Am Ziel werden die Verpackungen in umgekehrter Reihenfolge ausgewertet."],
+    kind: "capsule",
+  },
+  addresses: {
+    title: "Drei Ziele auf drei Ebenen",
+    intro: "Damit Daten ankommen, müssen lokaler Übertragungsschritt, Zielrechner und Zielprogramm unterschieden werden.",
+    points: ["IP-Adressen führen über Netzgrenzen zum Rechner.", "Ports unterscheiden Programme auf diesem Rechner.", "Frames und MAC-Adressen wirken im lokalen Netzabschnitt."],
+    kind: "addresses",
+  },
+  diagnostics: {
+    title: "Fehler mit dem Schichtenmodell eingrenzen",
+    intro: "Statt das gesamte Netzwerk zu verdächtigen, lässt sich eine Störung anhand der betroffenen Information einer Schicht zuordnen.",
+    points: ["Unbekannte Befehle betreffen die Anwendung.", "Ports und zuverlässige Übertragung gehören zum Transport.", "IP und Routing betreffen den Weg zwischen Netzen."],
+    kind: "diagnostics",
+  },
+  osi: {
+    title: "Zwei Modelle, unterschiedliche Auflösung",
+    intro: "Das OSI-Modell beschreibt Kommunikation in sieben feinen Schichten. Das TCP/IP-Modell fasst mehrere dieser Aufgaben zu vier praxisnahen Bereichen zusammen.",
+    points: ["Vergleiche Aufgaben – nicht nur Schichtnummern.", "Transport und Vermittlung sind in beiden Modellen klar erkennbar.", "Anwendungsnahe und mediennahe Aufgaben werden im TCP/IP-Modell stärker gebündelt."],
+    kind: "osi",
+  },
+};
+
+const dialogueConfigs = {
+  dialogue: {
+    welcome: "RX-Kanal geöffnet. M.A.R.A. wartet auf eine gültige Sitzung.",
+    commands: ["STATUS", "HELLO:TEAM7", "MODE:SAFE", "PING", "HELLO"],
+    goals: [["auth", "Sitzung öffnen"], ["status", "Status ermitteln"]],
+  },
+  recall: {
+    welcome: "Direktkanal bereit. Führe M.A.R.A. kontrolliert zum Labor zurück.",
+    commands: ["QUIT", "RETURN:LAB", "STATUS", "MODE:SAFE", "HELLO:TEAM7", "MODE:FAST"],
+    goals: [["auth", "Anmelden"], ["status", "Lage prüfen"], ["safe", "Sicherer Modus"], ["returned", "Rückkehr starten"], ["quit", "Sitzung beenden"]],
+  },
+};
+
+function shuffle(values) {
+  const result = [...values];
+  for (let index = result.length - 1; index > 0; index -= 1) {
+    const other = Math.floor(Math.random() * (index + 1));
+    [result[index], result[other]] = [result[other], result[index]];
+  }
+  return result;
+}
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>'"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[character]);
+}
+
 const missions = [
   {
     id: "trace",
@@ -11,7 +125,7 @@ const missions = [
     state: "SIGNAL FOUND",
     type: "categorize",
     instruction: "Tippe zuerst ein Fragment und danach den passenden Bereich. Bereits abgelegte Fragmente kannst du antippen und neu zuordnen.",
-    hint: "Ein Befehl sagt, was geschehen soll. Ein Trennzeichen strukturiert die Nachricht. Nutzdaten liefern den konkreten Inhalt.",
+    hint: "Vergleiche die Fragmente mit Wörtern und Satzzeichen: Welche Teile können allein eine Aktion benennen, welche strukturieren nur?",
     success: "Der erste Satzbau ist entschlüsselt: BEFEHL : NUTZDATEN. Das ist die Syntax von M.A.R.A.s Protokoll.",
     buckets: [
       { id: "command", label: "Befehl" },
@@ -41,13 +155,13 @@ const missions = [
     id: "dialogue",
     chapter: "Kapitel 1 · Protokolljagd",
     chapterNav: "01 · Protokolljagd",
-    title: "Dialog rekonstruieren",
+    title: "Erster Kontakt",
     story: "Die Reihenfolge ist entscheidend. M.A.R.A. akzeptiert Befehle erst, nachdem sich die Leitstelle korrekt angemeldet hat.",
-    prompt: "Setze den aufgezeichneten Dialog in eine gültige Reihenfolge.",
+    prompt: "Nimm über die Konsole Kontakt auf und ermittle M.A.R.A.s Zustand.",
     state: "PARSER ONLINE",
-    type: "sequence",
-    instruction: "Baue den Wechsel aus Anfrage und Antwort auf. Tippe einen abgelegten Baustein an, um ihn wieder zu entfernen.",
-    hint: "Zuerst stellt sich TEAM7 vor. Danach bestätigt M.A.R.A. ihre Bereitschaft. Erst dann kann der Status abgefragt werden.",
+    type: "dialogue",
+    instruction: "Gib selbst Befehle ein oder übernimm einen der abgefangenen Vorschläge. M.A.R.A.s Antwort hängt vom aktuellen Gesprächszustand ab.",
+    hint: "Achte auf M.A.R.A.s Fehlermeldung: Sie verrät, welche Voraussetzung für deine zuletzt gesendete Nachricht noch fehlt.",
     success: "Die Rollen sind klar: Der Client sendet Anfragen, M.A.R.A. antwortet als Server. Auch die Reihenfolge gehört zum Protokoll.",
     sequence: [
       { id: "a", label: "TEAM7 → HELLO:TEAM7" },
@@ -78,7 +192,7 @@ const missions = [
     state: "ERROR CHECK",
     type: "quiz",
     instruction: "Bearbeite die drei Fälle nacheinander. Nach jeder Entscheidung bekommst du eine direkte Rückmeldung.",
-    hint: "Unterscheide zwischen unbekanntem Befehl, fehlendem Wert und falschem Zustand des Gesprächs.",
+    hint: "Prüfe nacheinander drei Fragen: Ist der Aufbau vollständig? Ist das Schlüsselwort bekannt? Ist die Nachricht in dieser Phase erlaubt?",
     success: "M.A.R.A. kann Fehler nun eindeutig melden. Ein Protokoll beschreibt nicht nur den Normalfall, sondern auch Abweichungen.",
     questions: [
       {
@@ -115,13 +229,13 @@ const missions = [
     id: "recall",
     chapter: "Kapitel 1 · Protokolljagd",
     chapterNav: "01 · Protokolljagd",
-    title: "Rückrufsequenz",
+    title: "Rückrufkanal",
     story: "Das Kommunikationsprotokoll ist verstanden. Jetzt muss TEAM7 selbst eine vollständige Befehlsfolge senden.",
-    prompt: "Programmiere die kürzeste gültige Rückrufsequenz.",
+    prompt: "Steuere M.A.R.A. im Live-Dialog sicher zurück zum Labor.",
     state: "CHANNEL READY",
-    type: "sequence",
-    instruction: "Ordne nur die Client-Befehle. Die Serverantworten werden automatisch geprüft.",
-    hint: "Anmelden, Status prüfen, sicheren Modus aktivieren, Rückkehr auslösen, Verbindung sauber beenden.",
+    type: "dialogue",
+    instruction: "Die Konsole akzeptiert freie Eingaben. Erreiche alle Missionsziele; verfrühte oder ungültige Befehle verändern das Gespräch nicht.",
+    hint: "Lies die Zielmarken und Maschinenantworten wie eine Checkliste: Welcher Zustand muss erreicht sein, bevor eine Rückkehr gefahrlos sein kann?",
     success: "Rückruf erfolgreich. Du hast Syntax, Bedeutung, Reihenfolge und Zustände zu einem vollständigen Protokoll verbunden.",
     sequence: [
       { id: "a", label: "HELLO:TEAM7" },
@@ -151,7 +265,7 @@ const missions = [
     state: "STACK DAMAGED",
     type: "sequence",
     instruction: "Beginne bei der Anwendung, die Daten erzeugt. Der unterste Baustein bringt sie schließlich über das lokale Medium.",
-    hint: "Anwendung → Transport → Internet → Netzzugang. Jede Schicht nutzt die Dienste der Schicht darunter.",
+    hint: "Starte bei den Daten, die ein Programm versteht, und frage dann bei jeder Stufe: Was muss als Nächstes ergänzt werden, damit sie näher an das Übertragungsmedium kommen?",
     success: "Der Stapel steht. Das Schichtenmodell teilt komplexe Kommunikation in klar abgegrenzte Aufgaben.",
     sequence: [
       { id: "a", label: "Anwendungsschicht" },
@@ -180,7 +294,7 @@ const missions = [
     state: "PACKET ASSEMBLY",
     type: "sequence",
     instruction: "Die Anwendungsnachricht ist der Kern. Danach kommen TCP-, IP- und lokale Rahmeninformationen hinzu.",
-    hint: "Zuerst kennt nur die Anwendung RETURN:LAB. Dann folgen Ports, IP-Adressen und ganz außen der lokale Frame.",
+    hint: "Stell dir mehrere Umschläge vor: Welche Information wird zuerst erzeugt, und welche Verpackung braucht man erst unmittelbar für den lokalen Transport?",
     success: "Paket montiert. Beim Empfänger werden die Ergänzungen in umgekehrter Reihenfolge wieder entfernt.",
     sequence: [
       { id: "a", label: "Anwendungsdaten · RETURN:LAB" },
@@ -209,7 +323,7 @@ const missions = [
     state: "ROUTE SEARCH",
     type: "categorize",
     instruction: "Denke daran: Ein Rechner, ein Programm und eine lokale Netzwerkkarte werden auf unterschiedlichen Ebenen adressiert.",
-    hint: "Befehlssprache = Anwendung, Port = Transport, IP-Adresse = Internet, Frame/MAC = Netzzugang.",
+    hint: "Unterscheide vier Ziele: Bedeutung der Nachricht, Programm auf dem Zielrechner, Rechner in einem entfernten Netz und nächstes Gerät im lokalen Netz.",
     success: "Adressierung repariert: IP findet den Zielrechner, der Port das Zielprogramm und der lokale Frame den nächsten Übertragungsschritt.",
     buckets: [
       { id: "app", label: "Anwendung" },
@@ -246,7 +360,7 @@ const missions = [
     state: "DIAGNOSTICS",
     type: "quiz",
     instruction: "Wähle jeweils die Schicht, deren eigene Information oder Regel fehlerhaft ist.",
-    hint: "Frage dich bei jedem Fehler: Geht es um die Nachricht, das Zielprogramm, den Zielrechner oder das lokale Medium?",
+    hint: "Markiere in der Fehlermeldung das betroffene Objekt. Ist es ein Befehl, ein Dienst, ein Rechnerweg oder eine lokale Übertragung?",
     success: "Diagnose abgeschlossen. Das Schichtenmodell hilft, Fehler systematisch einzugrenzen und gezielt zu beheben.",
     questions: [
       { text: "Der Zielport ist falsch; auf dem Rechner hört dort kein Dienst.", options: ["Anwendung", "Transport", "Internet", "Netzzugang"], answer: 1, explanation: "Richtig: Ports gehören zur Transportschicht." },
@@ -275,7 +389,7 @@ const missions = [
     state: "MODEL SYNC",
     type: "categorize",
     instruction: "Tippe eine OSI-Schicht und danach den passenden TCP/IP-Bereich. Mehrere OSI-Schichten können gemeinsam in einem Bereich liegen.",
-    hint: "OSI 7–5 werden zur TCP/IP-Anwendung. OSI 4 und 3 entsprechen jeweils einer eigenen Schicht. OSI 2–1 bilden gemeinsam den Netzzugang.",
+    hint: "Vergleiche die Aufgaben beider Modelle. Suche zuerst die Schichten, deren Namen oder Kernaufgaben fast identisch sind; ordne danach die übrigen als Bündel zu.",
     success: "Modellabgleich vollständig: Das OSI-Modell beschreibt feiner, das TCP/IP-Modell fasst praktische Internetfunktionen zusammen.",
     buckets: [
       { id: "app", label: "TCP/IP Anwendung" },
@@ -310,6 +424,7 @@ const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 
 const elements = {
+  prologue: $("#prologue-view"),
   hero: $("#hero-view"),
   mission: $("#mission-view"),
   nav: $("#mission-nav"),
@@ -329,6 +444,11 @@ const elements = {
   intel: $("#intel-content"),
   dialog: $("#completion-dialog"),
   stats: $("#completion-stats"),
+  lessonTitle: $("#lesson-title"),
+  lessonVisual: $("#lesson-visual"),
+  lessonCopy: $("#lesson-copy"),
+  lessonConfirm: $("#lesson-confirm"),
+  puzzleCard: $("#puzzle-card"),
 };
 
 const blankState = () => ({
@@ -337,6 +457,8 @@ const blankState = () => ({
   complete: Array(missions.length).fill(false),
   signals: Array(missions.length).fill(3),
   hints: Array(missions.length).fill(false),
+  lessons: Array(missions.length).fill(false),
+  prologueSeen: false,
 });
 
 function loadState() {
@@ -349,6 +471,7 @@ function loadState() {
       complete: missions.map((_, index) => Boolean(stored.complete[index])),
       signals: missions.map((_, index) => Math.max(1, Math.min(3, Number(stored.signals?.[index]) || 3))),
       hints: missions.map((_, index) => Boolean(stored.hints?.[index])),
+      lessons: missions.map((_, index) => Boolean(stored.lessons?.[index] || stored.complete?.[index])),
     };
   } catch {
     return blankState();
@@ -358,6 +481,7 @@ function loadState() {
 let state = loadState();
 let interaction = {};
 let activeIntel = "log";
+let sceneIndex = 0;
 
 function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -409,14 +533,53 @@ function renderNav() {
 }
 
 function showHero() {
+  elements.prologue.classList.add("hidden");
   elements.hero.classList.remove("hidden");
   elements.mission.classList.add("hidden");
   renderNav();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
+function sceneArt(kind) {
+  const robot = `<svg class="scene-robot" viewBox="0 0 220 280" aria-hidden="true"><path d="M110 42V20"/><circle class="eye" cx="110" cy="16" r="7"/><rect class="head" x="49" y="46" width="122" height="82" rx="27"/><circle class="eye" cx="86" cy="86" r="9"/><circle class="eye" cx="134" cy="86" r="9"/><path d="M84 108h52M94 130v20h32v-20"/><rect class="body" x="36" y="149" width="148" height="95" rx="26"/><path d="M37 170 14 207M183 170l23 37M78 244v22M142 244v22"/></svg>`;
+  if (kind === "lab") return `<div class="scene-art"><div class="lab-window"><div class="city-line"></div></div><div class="desk"></div><div class="monitor left"></div><div class="monitor right"></div><div class="alarm-wash"></div></div>`;
+  if (kind === "forest") return `<div class="scene-art forest"><div class="scene-grid"></div>${robot}</div>`;
+  if (kind === "signal") return `<div class="scene-art"><div class="scene-grid"></div><div class="signal-wave"></div><div class="map-node a">TEAM7</div><div class="map-node b">M.A.R.A.</div><div class="map-line one"></div></div>`;
+  return `<div class="scene-art"><div class="scene-grid"></div><div class="map-line one"></div><div class="map-line two"></div><div class="map-node a">PROTOKOLL</div><div class="map-node b">OSI</div><div class="map-node c">TCP/IP</div>${robot}</div>`;
+}
+
+function renderScene() {
+  const scene = prologueScenes[sceneIndex];
+  $("#scene-kicker").textContent = scene.kicker;
+  $("#scene-title").textContent = scene.title;
+  $("#scene-text").textContent = scene.text;
+  $("#scene-transmission").innerHTML = `<small>ABGEFANGENE ÜBERTRAGUNG</small>${escapeHtml(scene.transmission)}`;
+  $("#scene-counter").innerHTML = prologueScenes.map((_, index) => `<span class="${index === sceneIndex ? "active" : ""}"></span>`).join("");
+  $("#scene-visual").innerHTML = sceneArt(scene.art);
+  $("#scene-back").disabled = sceneIndex === 0;
+  $("#scene-next").textContent = sceneIndex === prologueScenes.length - 1 ? "Zur Einsatzkarte" : "Weiter";
+  $("#scene-skip").classList.toggle("hidden", sceneIndex === prologueScenes.length - 1);
+}
+
+function showPrologue() {
+  sceneIndex = 0;
+  elements.prologue.classList.remove("hidden");
+  elements.hero.classList.add("hidden");
+  elements.mission.classList.add("hidden");
+  renderScene();
+  renderNav();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function finishPrologue() {
+  state.prologueSeen = true;
+  saveState();
+  showHero();
+}
+
 function start(mode) {
   state.mode = mode;
+  state.prologueSeen = true;
   saveState();
   const firstIncomplete = state.complete.findIndex((done) => !done);
   openMission(firstIncomplete === -1 ? 0 : firstIncomplete);
@@ -424,15 +587,25 @@ function start(mode) {
 
 function prepareInteraction(mission, completed) {
   if (mission.type === "sequence") {
-    interaction = { order: completed ? mission.sequence.map((item) => item.id) : [] };
+    interaction = { order: completed ? mission.sequence.map((item) => item.id) : [], poolOrder: shuffle(mission.sequence.map((item) => item.id)) };
   } else if (mission.type === "categorize") {
     const assignments = {};
     if (completed) mission.tokens.forEach((token) => { assignments[token.id] = token.bucket; });
-    interaction = { assignments, selected: null };
-  } else {
+    interaction = { assignments, selected: null, poolOrder: shuffle(mission.tokens.map((token) => token.id)) };
+  } else if (mission.type === "quiz") {
     interaction = {
       question: completed ? mission.questions.length - 1 : 0,
       selected: completed ? mission.questions.at(-1).answer : null,
+      optionOrders: mission.questions.map((question) => shuffle(question.options.map((_, index) => index))),
+    };
+  } else if (mission.type === "dialogue") {
+    const config = dialogueConfigs[mission.id];
+    const flags = {};
+    if (completed) config.goals.forEach(([key]) => { flags[key] = true; });
+    interaction = {
+      flags,
+      history: [{ who: "SYSTEM", type: "system", message: completed ? mission.success : config.welcome }],
+      commandOrder: shuffle(config.commands),
     };
   }
 }
@@ -444,6 +617,7 @@ function openMission(index) {
   saveState();
   activeIntel = "log";
   prepareInteraction(missions[index], state.complete[index]);
+  elements.prologue.classList.add("hidden");
   elements.hero.classList.add("hidden");
   elements.mission.classList.remove("hidden");
   renderMission();
@@ -459,10 +633,11 @@ function renderMission() {
   elements.puzzlePrompt.textContent = mission.prompt;
   elements.feedback.className = "feedback hidden";
   elements.feedback.textContent = "";
-  elements.check.classList.toggle("hidden", state.complete[state.current]);
+  elements.check.classList.toggle("hidden", state.complete[state.current] || mission.type === "dialogue");
   elements.next.classList.toggle("hidden", !state.complete[state.current]);
   elements.next.textContent = state.current === missions.length - 1 ? "Einsatzbericht" : "Nächste Mission";
-  elements.hint.disabled = state.complete[state.current];
+  elements.hint.disabled = state.complete[state.current] || !state.lessons[state.current];
+  renderLesson();
   renderSignal();
   renderPuzzle();
   renderIntel();
@@ -472,6 +647,37 @@ function renderMission() {
   if (state.complete[state.current]) {
     showFeedback(mission.success, "success");
   }
+}
+
+function lessonVisual(kind) {
+  if (kind === "grammar") return `<div class="mini-diagram"><div class="diagram-row"><span class="diagram-box accent">BEFEHL</span><span class="diagram-arrow">:</span><span class="diagram-box">NUTZDATEN</span></div><div class="diagram-caption">Ein vereinbarter Bauplan macht Nachrichten eindeutig zerlegbar.</div></div>`;
+  if (kind === "handshake") return `<div class="mini-diagram"><div class="diagram-row"><span class="diagram-box">CLIENT</span><span class="diagram-arrow">→</span><span class="diagram-box accent">ANFRAGE</span><span class="diagram-arrow">→</span><span class="diagram-box">SERVER</span></div><div class="diagram-row" style="margin-top:12px"><span class="diagram-box">CLIENT</span><span class="diagram-arrow">←</span><span class="diagram-box accent">ANTWORT</span><span class="diagram-arrow">←</span><span class="diagram-box">SERVER</span></div><div class="diagram-caption">Jede Antwort verändert, was als Nächstes möglich ist.</div></div>`;
+  if (kind === "errors") return `<div class="mini-diagram"><div class="diagram-row"><span class="diagram-box">AUFBAU?</span><span class="diagram-arrow">→</span><span class="diagram-box">BEKANNT?</span><span class="diagram-arrow">→</span><span class="diagram-box">ERLAUBT?</span></div><div class="diagram-caption">Drei Prüfschritte führen zu präzisen Fehlermeldungen.</div></div>`;
+  if (kind === "states") return `<div class="mini-diagram"><div class="diagram-row"><span class="diagram-box">GETRENNT</span><span class="diagram-arrow">→</span><span class="diagram-box">BEREIT</span><span class="diagram-arrow">→</span><span class="diagram-box">SICHER</span><span class="diagram-arrow">→</span><span class="diagram-box accent">RÜCKKEHR</span></div><div class="diagram-caption">Aktionen sind Übergänge zwischen Zuständen.</div></div>`;
+  if (kind === "stack") return `<div class="stack-diagram"><div class="stack-layer">Anwendung · Bedeutung</div><div class="stack-layer">Transport · Programmkontakt</div><div class="stack-layer">Internet · Weg zum Rechner</div><div class="stack-layer">Netzzugang · lokale Übertragung</div></div>`;
+  if (kind === "capsule") return `<div class="mini-diagram"><div class="diagram-row"><span class="diagram-box accent">DATEN</span><span class="diagram-arrow">⊂</span><span class="diagram-box">SEGMENT</span><span class="diagram-arrow">⊂</span><span class="diagram-box">PAKET</span><span class="diagram-arrow">⊂</span><span class="diagram-box">FRAME</span></div><div class="diagram-caption">Jede tiefere Schicht legt eine weitere Hülle an.</div></div>`;
+  if (kind === "addresses") return `<div class="mini-diagram"><div class="diagram-row"><span class="diagram-box">LOKALES GERÄT</span><span class="diagram-arrow">→</span><span class="diagram-box">RECHNER</span><span class="diagram-arrow">→</span><span class="diagram-box accent">PROGRAMM</span></div><div class="diagram-caption">Ein Datenweg benötigt mehrere Arten von Adressen.</div></div>`;
+  if (kind === "diagnostics") return `<div class="stack-diagram"><div class="stack-layer">Befehl nicht verstanden?</div><div class="stack-layer">Dienst nicht erreichbar?</div><div class="stack-layer">Rechnerweg falsch?</div><div class="stack-layer">Lokale Übertragung defekt?</div></div>`;
+  return `<div class="osi-map"><div class="osi-cell">OSI 7–5 · anwendungsnah</div><div class="osi-brace">AUFGABEN<br>VERGLEICHEN</div><div class="osi-cell">TCP/IP Anwendung</div><div class="osi-cell">OSI 4 · Transport</div><div class="osi-brace">↔</div><div class="osi-cell">TCP/IP Transport</div><div class="osi-cell">OSI 3 · Vermittlung</div><div class="osi-brace">↔</div><div class="osi-cell">TCP/IP Internet</div><div class="osi-cell">OSI 2–1 · mediennah</div><div class="osi-brace">AUFGABEN<br>VERGLEICHEN</div><div class="osi-cell">TCP/IP Netzzugang</div></div>`;
+}
+
+function renderLesson() {
+  const lesson = lessons[missions[state.current].id];
+  const read = state.lessons[state.current];
+  elements.lessonTitle.textContent = lesson.title;
+  elements.lessonVisual.innerHTML = lessonVisual(lesson.kind);
+  elements.lessonCopy.innerHTML = `<p>${escapeHtml(lesson.intro)}</p><ul class="lesson-points">${lesson.points.map((point) => `<li>${escapeHtml(point)}</li>`).join("")}</ul>`;
+  elements.lessonConfirm.classList.toggle("done", read);
+  elements.lessonConfirm.querySelector("span").textContent = read ? "Einsatzwissen aktiviert" : "Analyse abschließen und Aufgabe öffnen";
+  elements.puzzleCard.classList.toggle("unlocked", read);
+}
+
+function confirmLesson() {
+  state.lessons[state.current] = true;
+  saveState();
+  renderLesson();
+  elements.hint.disabled = state.complete[state.current];
+  elements.puzzleCard.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function renderSignal() {
@@ -485,6 +691,7 @@ function renderPuzzle() {
   if (mission.type === "sequence") renderSequence(mission);
   if (mission.type === "categorize") renderCategorize(mission);
   if (mission.type === "quiz") renderQuiz(mission);
+  if (mission.type === "dialogue") renderDialogue(mission);
 }
 
 function renderSequence(mission) {
@@ -496,7 +703,7 @@ function renderSequence(mission) {
       ${interaction.order.map((id, index) => `<button class="sequence-tile" type="button" data-remove="${id}"><span class="order">${index + 1}</span>${byId[id].label}</button>`).join("")}
     </div>
     <div class="tile-pool" id="tile-pool">
-      ${mission.sequence.filter((item) => !chosen.has(item.id)).map((item) => `<button class="sequence-tile" type="button" data-add="${item.id}">${item.label}</button>`).join("")}
+      ${interaction.poolOrder.filter((id) => !chosen.has(id)).map((id) => `<button class="sequence-tile" type="button" data-add="${id}">${byId[id].label}</button>`).join("")}
     </div>
   `;
   $$('[data-add]').forEach((button) => button.addEventListener("click", () => {
@@ -510,7 +717,8 @@ function renderSequence(mission) {
 }
 
 function renderCategorize(mission) {
-  const unassigned = mission.tokens.filter((token) => !interaction.assignments[token.id]);
+  const byId = Object.fromEntries(mission.tokens.map((token) => [token.id, token]));
+  const unassigned = interaction.poolOrder.map((id) => byId[id]).filter((token) => !interaction.assignments[token.id]);
   elements.puzzleArea.innerHTML = `
     <p class="puzzle-instruction">${mission.instruction}</p>
     <div class="tile-pool">
@@ -546,18 +754,103 @@ function renderCategorize(mission) {
 
 function renderQuiz(mission) {
   const question = mission.questions[interaction.question];
+  const optionOrder = interaction.optionOrders[interaction.question];
   elements.puzzleArea.innerHTML = `
     <p class="puzzle-instruction">${mission.instruction}</p>
     <div class="quiz-progress">FALL ${interaction.question + 1} VON ${mission.questions.length}</div>
     <h3 class="quiz-question">${question.text}</h3>
     <div class="quiz-options">
-      ${question.options.map((option, index) => `<button class="quiz-option${interaction.selected === index ? " selected" : ""}" type="button" data-option="${index}">${option}</button>`).join("")}
+      ${optionOrder.map((index) => `<button class="quiz-option${interaction.selected === index ? " selected" : ""}" type="button" data-option="${index}">${question.options[index]}</button>`).join("")}
     </div>
   `;
   $$('[data-option]').forEach((button) => button.addEventListener("click", () => {
     interaction.selected = Number(button.dataset.option);
     renderQuiz(mission);
   }));
+}
+
+function renderDialogue(mission) {
+  const config = dialogueConfigs[mission.id];
+  elements.puzzleArea.innerHTML = `
+    <p class="puzzle-instruction">${mission.instruction}</p>
+    <div class="dialogue-goals">
+      ${config.goals.map(([key, label]) => `<span class="dialogue-goal${interaction.flags[key] ? " done" : ""}">${interaction.flags[key] ? "✓ " : "○ "}${label}</span>`).join("")}
+    </div>
+    <div class="terminal-shell">
+      <div class="terminal-bar"><span class="terminal-lights"><i></i><i></i><i></i></span><span>TEAM7 // LIVE CHANNEL</span></div>
+      <div class="terminal-history" id="terminal-history">
+        ${interaction.history.map((entry) => `<div class="terminal-line ${entry.type}"><span class="who">${escapeHtml(entry.who)}</span><span class="message">${escapeHtml(entry.message)}</span></div>`).join("")}
+      </div>
+      <form class="terminal-input-row" id="terminal-form">
+        <input class="terminal-input" id="terminal-input" type="text" autocomplete="off" spellcheck="false" aria-label="Nachricht an M.A.R.A." placeholder="Nachricht eingeben …" />
+        <button class="terminal-send" type="submit">Senden</button>
+      </form>
+    </div>
+    <div class="command-deck" aria-label="Abgefangene Befehlsfragmente">
+      ${interaction.commandOrder.map((command) => `<button class="command-chip" type="button" data-command="${command}">${command}</button>`).join("")}
+    </div>
+  `;
+  const history = $("#terminal-history");
+  history.scrollTop = history.scrollHeight;
+  $("#terminal-form").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const input = $("#terminal-input");
+    sendDialogueMessage(mission, input.value);
+  });
+  $$('[data-command]').forEach((button) => button.addEventListener("click", () => {
+    const input = $("#terminal-input");
+    input.value = button.dataset.command;
+    input.focus();
+  }));
+}
+
+function dialogueReply(missionId, command) {
+  const flags = interaction.flags;
+  if (command === "PING") return "PONG:LINK_OK";
+  if (command === "HELLO") return "ERR:IDENTITY_MISSING";
+  if (command === "HELLO:TEAM7") {
+    flags.auth = true;
+    return "OK:READY";
+  }
+  if (command === "STATUS") {
+    if (!flags.auth) return "ERR:LOGIN_REQUIRED";
+    flags.status = true;
+    return "STATUS:RUNAWAY";
+  }
+  if (command === "MODE:SAFE") {
+    if (!flags.auth) return "ERR:LOGIN_REQUIRED";
+    flags.safe = true;
+    return "OK:SAFE";
+  }
+  if (command === "MODE:FAST") {
+    if (!flags.auth) return "ERR:LOGIN_REQUIRED";
+    return "ERR:MODE_BLOCKED";
+  }
+  if (command === "RETURN:LAB") {
+    if (!flags.auth) return "ERR:LOGIN_REQUIRED";
+    if (!flags.safe) return "ERR:SAFE_MODE_REQUIRED";
+    flags.returned = true;
+    return "OK:RETURNING";
+  }
+  if (command === "QUIT") {
+    if (missionId === "recall" && !(flags.auth && flags.status && flags.safe && flags.returned)) return "ERR:MISSION_ACTIVE";
+    flags.quit = true;
+    return "BYE:CHANNEL_CLOSED";
+  }
+  return command.includes(":") ? "ERR:UNKNOWN_COMMAND" : "ERR:VALUE_OR_COMMAND_UNKNOWN";
+}
+
+function sendDialogueMessage(mission, rawCommand) {
+  if (state.complete[state.current]) return;
+  const command = rawCommand.trim().toUpperCase();
+  if (!command) return;
+  interaction.history.push({ who: "TEAM7", type: "client", message: command });
+  const response = dialogueReply(mission.id, command);
+  interaction.history.push({ who: "M.A.R.A.", type: "mara", message: response });
+  const config = dialogueConfigs[mission.id];
+  const finished = config.goals.every(([key]) => interaction.flags[key]);
+  renderDialogue(mission);
+  if (finished) completeMission();
 }
 
 function renderIntel() {
@@ -699,14 +992,28 @@ function resetGame() {
   state = blankState();
   interaction = {};
   renderProgress();
-  showHero();
+  showPrologue();
 }
 
 $("#guided-start").addEventListener("click", () => start("guided"));
 $("#expert-start").addEventListener("click", () => start("expert"));
+$("#replay-prologue").addEventListener("click", showPrologue);
+$("#scene-back").addEventListener("click", () => {
+  sceneIndex = Math.max(0, sceneIndex - 1);
+  renderScene();
+});
+$("#scene-next").addEventListener("click", () => {
+  if (sceneIndex === prologueScenes.length - 1) finishPrologue();
+  else {
+    sceneIndex += 1;
+    renderScene();
+  }
+});
+$("#scene-skip").addEventListener("click", finishPrologue);
 $("#brand-button").addEventListener("click", showHero);
 $("#back-to-map").addEventListener("click", showHero);
 $("#reset-button").addEventListener("click", resetGame);
+$("#lesson-confirm").addEventListener("click", confirmLesson);
 $("#check-button").addEventListener("click", checkAnswer);
 $("#next-button").addEventListener("click", goNext);
 $("#hint-button").addEventListener("click", showHint);
@@ -717,4 +1024,5 @@ $$(".intel-tabs button").forEach((button) => button.addEventListener("click", ()
 }));
 
 renderProgress();
-renderNav();
+if (state.prologueSeen) showHero();
+else showPrologue();

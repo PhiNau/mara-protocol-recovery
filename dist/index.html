@@ -57,7 +57,25 @@
         </aside>
 
         <main class="game-stage" id="game-stage">
-          <section class="hero" id="hero-view">
+          <section class="prologue" id="prologue-view">
+            <div class="prologue-frame">
+              <div class="scene-visual" id="scene-visual" aria-live="polite"></div>
+              <div class="scene-copy">
+                <p class="eyebrow" id="scene-kicker"></p>
+                <div class="scene-counter" id="scene-counter"></div>
+                <h1 id="scene-title"></h1>
+                <p id="scene-text"></p>
+                <div class="scene-transmission" id="scene-transmission"></div>
+                <div class="scene-actions">
+                  <button class="secondary-button" id="scene-back" type="button">Zurück</button>
+                  <button class="primary-button" id="scene-next" type="button">Weiter</button>
+                </div>
+                <button class="text-button" id="scene-skip" type="button">Prolog überspringen</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="hero hidden" id="hero-view">
             <div class="hero-copy">
               <p class="eyebrow"><span></span> Netzwerk-Leitstelle · Störung 07</p>
               <h1>Eine Maschine ist aus dem Takt geraten.</h1>
@@ -87,6 +105,7 @@
                   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
                 </button>
                 <button class="secondary-button" id="expert-start" type="button">Fortgeschrittenenroute öffnen</button>
+                <button class="text-button" id="replay-prologue" type="button">Prolog erneut ansehen</button>
               </div>
               <p class="route-note">Beide Routen enthalten dieselben Fachinhalte. Die geführte Route schaltet Missionen nacheinander frei.</p>
             </div>
@@ -138,24 +157,39 @@
             </div>
 
             <div class="mission-layout">
-              <article class="puzzle-card">
-                <header class="puzzle-header">
-                  <span class="puzzle-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24"><path d="M9 3h6v4H9zM5 9h14v12H5zM9 13h6M9 17h4" /></svg>
-                  </span>
-                  <div><small>AUFGABE</small><h2 id="puzzle-prompt"></h2></div>
-                </header>
-                <div class="puzzle-body" id="puzzle-area"></div>
-                <div class="feedback hidden" id="feedback" role="status"></div>
-                <div class="puzzle-actions">
-                  <button class="ghost-button" id="hint-button" type="button">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 22h4M8.5 14.5A6 6 0 1 1 15.5 14.5C14.6 15.2 14 16 14 17h-4c0-1-.6-1.8-1.5-2.5Z" /></svg>
-                    Hinweis
+              <div class="mission-main">
+                <article class="lesson-card">
+                  <header class="lesson-header">
+                    <span class="phase-badge">1</span>
+                    <div><small>EINSATZWISSEN</small><h2 id="lesson-title"></h2></div>
+                  </header>
+                  <div class="lesson-content">
+                    <div class="lesson-visual" id="lesson-visual"></div>
+                    <div class="lesson-copy" id="lesson-copy"></div>
+                  </div>
+                  <button class="lesson-confirm" id="lesson-confirm" type="button">
+                    <span>Analyse abgeschlossen</span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
                   </button>
-                  <button class="primary-button compact" id="check-button" type="button">Prüfen</button>
-                  <button class="primary-button compact hidden" id="next-button" type="button">Nächste Mission</button>
-                </div>
-              </article>
+                </article>
+
+                <article class="puzzle-card locked-puzzle" id="puzzle-card">
+                  <header class="puzzle-header">
+                    <span class="phase-badge action">2</span>
+                    <div><small>ANWENDUNG</small><h2 id="puzzle-prompt"></h2></div>
+                  </header>
+                  <div class="puzzle-body" id="puzzle-area"></div>
+                  <div class="feedback hidden" id="feedback" role="status"></div>
+                  <div class="puzzle-actions">
+                    <button class="ghost-button" id="hint-button" type="button">
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 22h4M8.5 14.5A6 6 0 1 1 15.5 14.5C14.6 15.2 14 16 14 17h-4c0-1-.6-1.8-1.5-2.5Z" /></svg>
+                      Denkanstoß
+                    </button>
+                    <button class="primary-button compact" id="check-button" type="button">Prüfen</button>
+                    <button class="primary-button compact hidden" id="next-button" type="button">Nächste Mission</button>
+                  </div>
+                </article>
+              </div>
 
               <aside class="intel-panel">
                 <div class="intel-tabs" role="tablist">
