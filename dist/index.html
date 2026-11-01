@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#07111f" />
+    <meta
+      name="description"
+      content="M.A.R.A. – ein interaktives Netzwerk-Lernspiel zu Protokollen, TCP/IP-Schichten und dem OSI-Modell."
+    />
+    <title>M.A.R.A. – Protocol Recovery</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <button class="brand" id="brand-button" type="button" aria-label="Zur Einsatzübersicht">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 48 48" role="img">
+              <path d="M24 5v6M10 19H5M43 19h-5" />
+              <rect x="10" y="11" width="28" height="27" rx="8" />
+              <circle cx="19" cy="23" r="2.5" />
+              <circle cx="29" cy="23" r="2.5" />
+              <path d="M18 31h12" />
+            </svg>
+          </span>
+          <span>
+            <strong>M.A.R.A.</strong>
+            <small>Protocol Recovery</small>
+          </span>
+        </button>
+
+        <div class="top-progress" aria-label="Missionsfortschritt">
+          <div class="progress-copy">
+            <span>Einsatzfortschritt</span>
+            <strong id="progress-label">0 / 9</strong>
+          </div>
+          <div class="progress-track"><span id="progress-bar"></span></div>
+        </div>
+
+        <button class="icon-button" id="reset-button" type="button" title="Fortschritt zurücksetzen">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8m0-5v5h5" /></svg>
+          <span>Neustart</span>
+        </button>
+      </header>
+
+      <div class="workspace">
+        <aside class="mission-rail" aria-label="Missionen">
+          <div class="rail-heading">
+            <span class="status-dot"></span>
+            <div><small>Einsatzkanal</small><strong>NET-Q2 / 07</strong></div>
+          </div>
+          <nav id="mission-nav"></nav>
+          <div class="rail-footer">
+            <span>Fortschritt wird nur auf diesem Gerät gespeichert.</span>
+          </div>
+        </aside>
+
+        <main class="game-stage" id="game-stage">
+          <section class="hero" id="hero-view">
+            <div class="hero-copy">
+              <p class="eyebrow"><span></span> Netzwerk-Leitstelle · Störung 07</p>
+              <h1>Eine Maschine ist aus dem Takt geraten.</h1>
+              <p class="hero-lead">
+                M.A.R.A. reagiert nur noch auf ein unbekanntes Kommunikationsprotokoll. Rekonstruiere ihre Sprache,
+                repariere den Netzwerkstapel und bringe sie sicher zurück ins Labor.
+              </p>
+
+              <div class="briefing-grid">
+                <article>
+                  <span class="briefing-number">01</span>
+                  <div><strong>Protokolljagd</strong><p>Syntax, Semantik, Zustände und Fehlerregeln erschließen.</p></div>
+                </article>
+                <article>
+                  <span class="briefing-number">02</span>
+                  <div><strong>Schichtenwerkstatt</strong><p>Nachrichten kapseln und durch TCP/IP transportieren.</p></div>
+                </article>
+                <article>
+                  <span class="briefing-number">03</span>
+                  <div><strong>OSI-Transfer</strong><p>Sieben Referenzschichten dem Internetmodell zuordnen.</p></div>
+                </article>
+              </div>
+
+              <div class="hero-actions">
+                <button class="primary-button" id="guided-start" type="button">
+                  Geführte Mission starten
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
+                </button>
+                <button class="secondary-button" id="expert-start" type="button">Fortgeschrittenenroute öffnen</button>
+              </div>
+              <p class="route-note">Beide Routen enthalten dieselben Fachinhalte. Die geführte Route schaltet Missionen nacheinander frei.</p>
+            </div>
+
+            <div class="hero-visual" aria-label="Darstellung der entlaufenen Maschine M.A.R.A.">
+              <div class="radar-ring ring-one"></div>
+              <div class="radar-ring ring-two"></div>
+              <div class="signal signal-a"></div>
+              <div class="signal signal-b"></div>
+              <div class="robot-card">
+                <div class="robot-alert"><span></span> SIGNAL UNSTABLE</div>
+                <svg class="robot" viewBox="0 0 260 300" role="img" aria-label="M.A.R.A. Roboter">
+                  <path class="robot-antenna" d="M130 44V21" />
+                  <circle class="robot-antenna-dot" cx="130" cy="16" r="8" />
+                  <rect class="robot-head" x="62" y="48" width="136" height="94" rx="30" />
+                  <circle class="robot-eye" cx="103" cy="92" r="12" />
+                  <circle class="robot-eye" cx="157" cy="92" r="12" />
+                  <path class="robot-mouth" d="M102 119h56" />
+                  <path class="robot-neck" d="M112 143v20h36v-20" />
+                  <rect class="robot-body" x="45" y="160" width="170" height="105" rx="28" />
+                  <circle class="robot-core" cx="130" cy="208" r="26" />
+                  <path class="robot-arm" d="M46 181 19 219M214 181l27 38" />
+                  <path class="robot-foot" d="M91 264v22M169 264v22" />
+                </svg>
+                <div class="robot-readout"><span>STATE</span><strong>RUNAWAY</strong></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="mission-view hidden" id="mission-view" aria-live="polite">
+            <div class="mission-topline">
+              <button class="back-button" id="back-to-map" type="button">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+                Einsatzübersicht
+              </button>
+              <div class="signal-meter" id="signal-meter" aria-label="Signalqualität"></div>
+            </div>
+
+            <div class="mission-heading">
+              <div>
+                <p class="eyebrow" id="mission-chapter"></p>
+                <h1 id="mission-title"></h1>
+                <p id="mission-story"></p>
+              </div>
+              <div class="machine-state">
+                <small>M.A.R.A. STATUS</small>
+                <strong id="machine-state">RUNAWAY</strong>
+              </div>
+            </div>
+
+            <div class="mission-layout">
+              <article class="puzzle-card">
+                <header class="puzzle-header">
+                  <span class="puzzle-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M9 3h6v4H9zM5 9h14v12H5zM9 13h6M9 17h4" /></svg>
+                  </span>
+                  <div><small>AUFGABE</small><h2 id="puzzle-prompt"></h2></div>
+                </header>
+                <div class="puzzle-body" id="puzzle-area"></div>
+                <div class="feedback hidden" id="feedback" role="status"></div>
+                <div class="puzzle-actions">
+                  <button class="ghost-button" id="hint-button" type="button">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 22h4M8.5 14.5A6 6 0 1 1 15.5 14.5C14.6 15.2 14 16 14 17h-4c0-1-.6-1.8-1.5-2.5Z" /></svg>
+                    Hinweis
+                  </button>
+                  <button class="primary-button compact" id="check-button" type="button">Prüfen</button>
+                  <button class="primary-button compact hidden" id="next-button" type="button">Nächste Mission</button>
+                </div>
+              </article>
+
+              <aside class="intel-panel">
+                <div class="intel-tabs" role="tablist">
+                  <button class="active" type="button" data-intel="log">Einsatzlog</button>
+                  <button type="button" data-intel="glossary">Fachbegriffe</button>
+                </div>
+                <div class="intel-content" id="intel-content"></div>
+              </aside>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <dialog class="completion-dialog" id="completion-dialog">
+      <div class="completion-mark">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><path d="m12 25 8 8 17-19" /></svg>
+      </div>
+      <p class="eyebrow">Einsatz abgeschlossen</p>
+      <h2>M.A.R.A. ist wieder im Labor.</h2>
+      <p>Du hast ihr Protokoll rekonstruiert, die Übertragung repariert und TCP/IP mit dem OSI-Modell verknüpft.</p>
+      <div class="completion-stats" id="completion-stats"></div>
+      <button class="primary-button" id="close-completion" type="button">Einsatzbericht ansehen</button>
+    </dialog>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
