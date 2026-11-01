@@ -35,54 +35,81 @@ const lessons = {
   trace: {
     title: "Wie Protokolle Nachrichten lesbar machen",
     intro: "Computer können nur zusammenarbeiten, wenn beide Seiten denselben Aufbau erwarten. Diese formalen Regeln nennt man Syntax.",
+    why: "Ohne eindeutige Syntax kann ein Empfänger nicht entscheiden, wo ein Befehl endet und seine Daten beginnen.",
+    example: "Wie bei einem Chatbefehl /nick:Alex trennt der Doppelpunkt Aktion und konkreten Wert.",
+    question: "Welche Rolle spielt jedes Fragment – unabhängig davon, an welcher Stelle es gerade liegt?",
     points: ["Schlüsselwörter bezeichnen mögliche Aktionen.", "Trennzeichen grenzen Bestandteile eindeutig voneinander ab.", "Nutzdaten konkretisieren einen Befehl, etwa einen Namen oder Modus."],
     kind: "grammar",
   },
   dialogue: {
     title: "Anfrage, Antwort und Gesprächszustand",
     intro: "Ein Protokoll ist mehr als ein Nachrichtenformat. Es legt auch fest, wer beginnt und welche Nachricht in welcher Phase erlaubt ist.",
+    why: "Online-Banking, Spiele und Chats müssen wissen, ob eine Verbindung gerade neu, angemeldet oder beendet ist.",
+    example: "Eine Tür öffnet sich auch nicht, bevor eine Zugangskarte erkannt wurde – selbst wenn der Öffnungsbefehl korrekt ist.",
+    question: "Welche Antwort verrät dir, was M.A.R.A. vor dem nächsten Befehl erwartet?",
     points: ["Der Client stellt eine Anfrage; der Server reagiert darauf.", "Eine Begrüßung kann eine Sitzung eröffnen.", "Dieselbe Nachricht kann je nach aktuellem Zustand gültig oder ungültig sein."],
     kind: "handshake",
   },
   errors: {
     title: "Fehler sind Teil des Protokolls",
     intro: "Gute Protokolle definieren eindeutige Antworten auf unvollständige, unbekannte oder verfrühte Nachrichten.",
+    why: "Präzise Fehlercodes machen aus blindem Raten eine gezielte Reparatur.",
+    example: "HTTP unterscheidet ebenfalls, ob etwas verboten, unbekannt oder vorübergehend nicht erreichbar ist.",
+    question: "Ist die Nachricht falsch gebaut, unbekannt oder nur im falschen Moment angekommen?",
     points: ["Syntaxfehler: Der Aufbau ist unvollständig.", "Semantikfehler: Der Befehl ist unbekannt oder unpassend.", "Zustandsfehler: Die Nachricht kommt in der falschen Gesprächsphase."],
     kind: "errors",
   },
   recall: {
     title: "Eine Sitzung gezielt steuern",
     intro: "Komplexe Aktionen entstehen oft aus mehreren kleinen, bestätigten Schritten. Der nächste Schritt darf erst erfolgen, wenn sein notwendiger Zustand erreicht ist.",
+    why: "Steuerprotokolle verhindern dadurch, dass Maschinen riskante Aktionen überspringen.",
+    example: "Ein Drucker nimmt einen Druckauftrag erst an, nachdem Verbindung und Bereitschaft bestätigt wurden.",
+    question: "Welcher bestätigte Zustand ist die Voraussetzung für deinen nächsten Schritt?",
     points: ["Antworten liefern Hinweise auf den aktuellen Zustand.", "Sicherheitskritische Aktionen benötigen Voraussetzungen.", "Ein sauberer Abschluss beendet die Sitzung eindeutig."],
     kind: "states",
   },
   stack: {
     title: "Arbeitsteilung im TCP/IP-Modell",
     intro: "Netzwerkkommunikation wird in Schichten zerlegt. Jede Schicht löst eine andere Teilaufgabe und bietet der darüberliegenden Schicht einen Dienst an.",
+    why: "So kann eine Anwendung unverändert über WLAN, Kabel oder Mobilfunk kommunizieren.",
+    example: "Wie bei einer Paketlieferung kümmern sich Inhalt, Zustellung, Route und Transportmittel um verschiedene Probleme.",
+    question: "In welcher Reihenfolge begegnet eine Nachricht den Aufgaben auf dem Weg nach unten?",
     points: ["Oben entstehen anwendungsspezifische Nachrichten.", "In der Mitte werden Programme und Rechner adressiert.", "Unten erfolgt die konkrete Übertragung im lokalen Netz."],
     kind: "stack",
   },
   encapsulation: {
     title: "Kapselung: Eine Nachricht wird reisefertig",
     intro: "Beim Senden ergänzt jede Schicht eigene Steuerinformationen. So entsteht aus Anwendungsdaten schrittweise eine übertragbare Einheit.",
+    why: "Nur mit diesen Zusatzinformationen wissen Netze, wohin Daten gehören und welches Programm sie erhalten soll.",
+    example: "Ein Brief steckt im Umschlag, der Umschlag in einer Transportkiste – jede Hülle hat andere Angaben.",
+    question: "Welche Information wird wann benötigt, und welche Hülle liegt am Ende ganz außen?",
     points: ["Die ursprüngliche Nachricht bleibt im Inneren erhalten.", "Jeder Header ist für eine bestimmte Schicht bestimmt.", "Am Ziel werden die Verpackungen in umgekehrter Reihenfolge ausgewertet."],
     kind: "capsule",
   },
   addresses: {
     title: "Drei Ziele auf drei Ebenen",
     intro: "Damit Daten ankommen, müssen lokaler Übertragungsschritt, Zielrechner und Zielprogramm unterschieden werden.",
+    why: "Eine einzige Adresse könnte nicht gleichzeitig Gebäude, Wohnung und Empfänger unterscheiden.",
+    example: "IP ähnelt der Gebäudeadresse, der Port der Wohnungsnummer und der lokale Frame dem nächsten Lieferfahrzeug.",
+    question: "Welches Ziel bezeichnet die jeweilige Information tatsächlich?",
     points: ["IP-Adressen führen über Netzgrenzen zum Rechner.", "Ports unterscheiden Programme auf diesem Rechner.", "Frames und MAC-Adressen wirken im lokalen Netzabschnitt."],
     kind: "addresses",
   },
   diagnostics: {
     title: "Fehler mit dem Schichtenmodell eingrenzen",
     intro: "Statt das gesamte Netzwerk zu verdächtigen, lässt sich eine Störung anhand der betroffenen Information einer Schicht zuordnen.",
+    why: "Eine gute Diagnose spart Zeit: Ein falscher Port wird nicht durch den Austausch des WLAN-Kabels repariert.",
+    example: "Techniker prüfen zuerst, ob Inhalt, Dienst, Route oder lokale Verbindung betroffen ist.",
+    question: "Welche Beobachtung grenzt den Fehler am stärksten ein?",
     points: ["Unbekannte Befehle betreffen die Anwendung.", "Ports und zuverlässige Übertragung gehören zum Transport.", "IP und Routing betreffen den Weg zwischen Netzen."],
     kind: "diagnostics",
   },
   osi: {
     title: "Zwei Modelle, unterschiedliche Auflösung",
     intro: "Das OSI-Modell beschreibt Kommunikation in sieben feinen Schichten. Das TCP/IP-Modell fasst mehrere dieser Aufgaben zu vier praxisnahen Bereichen zusammen.",
+    why: "Beide Modelle helfen, dieselbe Kommunikation aus unterschiedlicher Detailtiefe zu beschreiben.",
+    example: "Eine Landkarte und ein Stadtplan zeigen dasselbe Gebiet, bündeln Informationen aber unterschiedlich.",
+    question: "Welche Aufgabe bleibt gleich, auch wenn das andere Modell sie mit weiteren Aufgaben zusammenfasst?",
     points: ["Vergleiche Aufgaben – nicht nur Schichtnummern.", "Transport und Vermittlung sind in beiden Modellen klar erkennbar.", "Anwendungsnahe und mediennahe Aufgaben werden im TCP/IP-Modell stärker gebündelt."],
     kind: "osi",
   },
@@ -92,12 +119,51 @@ const dialogueConfigs = {
   dialogue: {
     welcome: "RX-Kanal geöffnet. M.A.R.A. wartet auf eine gültige Sitzung.",
     commands: ["STATUS", "HELLO:TEAM7", "MODE:SAFE", "PING", "HELLO"],
-    goals: [["auth", "Sitzung öffnen"], ["status", "Status ermitteln"]],
+    goals: [["error", "Protokollgrenze entdecken"], ["auth", "Sitzung öffnen"], ["status", "Status ermitteln"]],
   },
   recall: {
     welcome: "Direktkanal bereit. Führe M.A.R.A. kontrolliert zum Labor zurück.",
     commands: ["QUIT", "RETURN:LAB", "STATUS", "MODE:SAFE", "HELLO:TEAM7", "MODE:FAST"],
     goals: [["auth", "Anmelden"], ["status", "Lage prüfen"], ["safe", "Sicherer Modus"], ["returned", "Rückkehr starten"], ["quit", "Sitzung beenden"]],
+  },
+};
+
+const missionNarrative = {
+  trace: {
+    before: "M.A.R.A. // …SPRACHE BESCHÄDIGT… TRENNUNG UNKLAR…",
+    after: "M.A.R.A. // FRAGMENTE ERKANNT. IHR BEGINNT, MICH ZU VERSTEHEN.",
+  },
+  dialogue: {
+    before: "LEITSTELLE // Testet nicht nur den richtigen Befehl. Findet heraus, wie M.A.R.A. auf einen falschen Zustand reagiert.",
+    after: "M.A.R.A. // TEAM7 IDENTIFIZIERT. STATUSKANAL OFFEN.",
+  },
+  errors: {
+    before: "M.A.R.A. // DREI STÖRUNGEN. DREI URSACHEN. NICHT ALLES IST EIN SYNTAXFEHLER.",
+    after: "M.A.R.A. // FEHLERCODES REKONSTRUIERT. MISSVERSTÄNDNISSE SINKEN.",
+  },
+  recall: {
+    before: "LEITSTELLE // Der Rückruf ist sicherheitskritisch. Verlasst euch auf Bestätigungen, nicht auf Vermutungen.",
+    after: "M.A.R.A. // RÜCKKEHR AKTIV. ABER MEINE PAKETE VERLIEREN DEN WEG.",
+  },
+  stack: {
+    before: "M.A.R.A. // ANWENDUNG SPRICHT. NETZWERK SCHWEIGT. VIER AUFGABEN SIND VERTAUSCHT.",
+    after: "M.A.R.A. // SCHICHTEN GESTAPELT. JEDE AUFGABE HAT WIEDER IHREN ORT.",
+  },
+  encapsulation: {
+    before: "LEITSTELLE // Eine nackte Anwendungsnachricht kann nicht reisen. Baut sie Schicht für Schicht auf.",
+    after: "M.A.R.A. // FRAME BEREIT. DATEN SIND REISEFÄHIG.",
+  },
+  addresses: {
+    before: "M.A.R.A. // ICH KENNE DAS ZIEL – ABER NICHT, OB ES RECHNER, PROGRAMM ODER NÄCHSTER HOP IST.",
+    after: "M.A.R.A. // ADRESSEN GETRENNT. ZIELPROGRAMM GEFUNDEN.",
+  },
+  diagnostics: {
+    before: "LEITSTELLE // Vier Symptome, vier Ebenen. Findet die Ursache, bevor ihr Komponenten austauscht.",
+    after: "M.A.R.A. // DIAGNOSEKANAL GRÜN. FEHLER LASSEN SICH EINGRENZEN.",
+  },
+  osi: {
+    before: "LABOR // Unser Bericht verlangt sieben OSI-Schichten. Übersetzt die reparierte TCP/IP-Sicht, ohne Aufgaben zu verlieren.",
+    after: "M.A.R.A. // MODELLE SYNCHRON. ROUTE ZUM LABOR FREIGEGEBEN.",
   },
 };
 
@@ -139,6 +205,9 @@ const missions = [
       { id: "mode", label: "MODE", bucket: "command" },
       { id: "colon2", label: ":", bucket: "separator" },
       { id: "safe", label: "SAFE", bucket: "payload" },
+      { id: "status", label: "STATUS", bucket: "command" },
+      { id: "colon3", label: ":", bucket: "separator" },
+      { id: "runaway", label: "RUNAWAY", bucket: "payload" },
     ],
     log: [
       "Der Datenstrom enthält wiederkehrende Wörter und Doppelpunkte.",
@@ -157,10 +226,10 @@ const missions = [
     chapterNav: "01 · Protokolljagd",
     title: "Erster Kontakt",
     story: "Die Reihenfolge ist entscheidend. M.A.R.A. akzeptiert Befehle erst, nachdem sich die Leitstelle korrekt angemeldet hat.",
-    prompt: "Nimm über die Konsole Kontakt auf und ermittle M.A.R.A.s Zustand.",
+    prompt: "Entdecke eine Protokollgrenze, stelle Kontakt her und ermittle M.A.R.A.s Zustand.",
     state: "PARSER ONLINE",
     type: "dialogue",
-    instruction: "Gib selbst Befehle ein oder übernimm einen der abgefangenen Vorschläge. M.A.R.A.s Antwort hängt vom aktuellen Gesprächszustand ab.",
+    instruction: "Teste bewusst auch einen verfrühten oder unvollständigen Befehl. Stelle danach die Sitzung her und ermittle den Status. M.A.R.A.s Antworten sind deine Hinweise.",
     hint: "Achte auf M.A.R.A.s Fehlermeldung: Sie verrät, welche Voraussetzung für deine zuletzt gesendete Nachricht noch fehlt.",
     success: "Die Rollen sind klar: Der Client sendet Anfragen, M.A.R.A. antwortet als Server. Auch die Reihenfolge gehört zum Protokoll.",
     sequence: [
@@ -187,11 +256,11 @@ const missions = [
     chapter: "Kapitel 1 · Protokolljagd",
     chapterNav: "01 · Protokolljagd",
     title: "Störmeldungen",
-    story: "Ein robustes Protokoll muss auch ungültige Nachrichten behandeln. Drei Fehlerfälle blockieren noch den Rückrufkanal.",
+    story: "Ein robustes Protokoll muss auch ungültige Nachrichten behandeln. Fünf unterschiedliche Störfälle blockieren noch den Rückrufkanal.",
     prompt: "Wähle für jeden Fehler die passende Protokollantwort.",
     state: "ERROR CHECK",
     type: "quiz",
-    instruction: "Bearbeite die drei Fälle nacheinander. Nach jeder Entscheidung bekommst du eine direkte Rückmeldung.",
+    instruction: "Unterscheide Aufbau, Bedeutung und Gesprächszustand. Nach jeder Entscheidung bekommst du eine fachliche Rückmeldung.",
     hint: "Prüfe nacheinander drei Fragen: Ist der Aufbau vollständig? Ist das Schlüsselwort bekannt? Ist die Nachricht in dieser Phase erlaubt?",
     success: "M.A.R.A. kann Fehler nun eindeutig melden. Ein Protokoll beschreibt nicht nur den Normalfall, sondern auch Abweichungen.",
     questions: [
@@ -212,6 +281,18 @@ const missions = [
         options: ["OK:RETURNING", "ERR:LOGIN_REQUIRED", "ERR:UNKNOWN_COMMAND"],
         answer: 1,
         explanation: "Richtig: Der Befehl ist erlaubt, aber noch nicht in diesem Zustand des Dialogs.",
+      },
+      {
+        text: "TEAM7 sendet „HELLO TEAM7“ ohne das vereinbarte Trennzeichen.",
+        options: ["ERR:FORMAT", "ERR:UNKNOWN_COMMAND", "OK:READY"],
+        answer: 0,
+        explanation: "Richtig: Die Bestandteile sind erkennbar, aber der vereinbarte Nachrichtenaufbau wurde verletzt.",
+      },
+      {
+        text: "Eine bereits angemeldete Leitstelle sendet erneut „HELLO:TEAM7“.",
+        options: ["ERR:ALREADY_CONNECTED", "ERR:VALUE_MISSING", "STATUS:RUNAWAY"],
+        answer: 0,
+        explanation: "Richtig: Die Nachricht ist syntaktisch korrekt, passt aber nicht mehr zum aktuellen Sitzungszustand.",
       },
     ],
     log: [
@@ -261,17 +342,17 @@ const missions = [
     chapterNav: "02 · Schichtenwerkstatt",
     title: "Schichtenstapel",
     story: "M.A.R.A.s Nachricht ist korrekt, erreicht das Labor aber nicht. Ordne die Aufgaben des Netzwerkstapels von oben nach unten.",
-    prompt: "Baue das vierstufige TCP/IP-Modell auf.",
+    prompt: "Bringe vier konkrete Netzwerkaufgaben in die Reihenfolge des TCP/IP-Stapels.",
     state: "STACK DAMAGED",
     type: "sequence",
-    instruction: "Beginne bei der Anwendung, die Daten erzeugt. Der unterste Baustein bringt sie schließlich über das lokale Medium.",
+    instruction: "Die Karten tragen absichtlich nicht nur Schichtnamen. Ordne die Aufgaben vom anwendungsnahen Schritt bis zur lokalen Übertragung.",
     hint: "Starte bei den Daten, die ein Programm versteht, und frage dann bei jeder Stufe: Was muss als Nächstes ergänzt werden, damit sie näher an das Übertragungsmedium kommen?",
     success: "Der Stapel steht. Das Schichtenmodell teilt komplexe Kommunikation in klar abgegrenzte Aufgaben.",
     sequence: [
-      { id: "a", label: "Anwendungsschicht" },
-      { id: "b", label: "Transportschicht" },
-      { id: "c", label: "Internetschicht" },
-      { id: "d", label: "Netzzugangsschicht" },
+      { id: "a", label: "RETURN:LAB als M.A.R.A.-Befehl verstehen" },
+      { id: "b", label: "Daten dem Dienst auf Port 5000 zustellen" },
+      { id: "c", label: "Weg zur Ziel-IP über Netze bestimmen" },
+      { id: "d", label: "Frame über den nächsten WLAN-Abschnitt senden" },
     ],
     log: [
       "Die Anwendung kennt M.A.R.A.s Befehle.",
@@ -297,10 +378,10 @@ const missions = [
     hint: "Stell dir mehrere Umschläge vor: Welche Information wird zuerst erzeugt, und welche Verpackung braucht man erst unmittelbar für den lokalen Transport?",
     success: "Paket montiert. Beim Empfänger werden die Ergänzungen in umgekehrter Reihenfolge wieder entfernt.",
     sequence: [
-      { id: "a", label: "Anwendungsdaten · RETURN:LAB" },
-      { id: "b", label: "TCP-Segment · Ports ergänzen" },
-      { id: "c", label: "IP-Paket · IP-Adressen ergänzen" },
-      { id: "d", label: "Frame · lokales Netz ergänzen" },
+      { id: "a", label: "Kern · RETURN:LAB" },
+      { id: "b", label: "Hülle · Quell-/Zielport und Sequenznummer" },
+      { id: "c", label: "Hülle · Quell-/Ziel-IP und Lebensdauer" },
+      { id: "d", label: "Außenhülle · MAC-Ziel und Prüfsumme" },
     ],
     log: [
       "Jede Schicht fügt einen eigenen Header hinzu.",
@@ -355,7 +436,7 @@ const missions = [
     chapter: "Kapitel 2 · Schichtenwerkstatt",
     chapterNav: "02 · Schichtenwerkstatt",
     title: "Fehlerdiagnose",
-    story: "Die Telemetrie meldet vier Störungen. Lokalisiere jede Störung, ohne den gesamten Netzwerkstapel zu zerlegen.",
+    story: "Die Telemetrie meldet sechs Störungen. Lokalisiere jede Störung anhand der Symptome, ohne den gesamten Netzwerkstapel zu zerlegen.",
     prompt: "Bestimme für jeden Fehler die betroffene Schicht.",
     state: "DIAGNOSTICS",
     type: "quiz",
@@ -363,10 +444,12 @@ const missions = [
     hint: "Markiere in der Fehlermeldung das betroffene Objekt. Ist es ein Befehl, ein Dienst, ein Rechnerweg oder eine lokale Übertragung?",
     success: "Diagnose abgeschlossen. Das Schichtenmodell hilft, Fehler systematisch einzugrenzen und gezielt zu beheben.",
     questions: [
-      { text: "Der Zielport ist falsch; auf dem Rechner hört dort kein Dienst.", options: ["Anwendung", "Transport", "Internet", "Netzzugang"], answer: 1, explanation: "Richtig: Ports gehören zur Transportschicht." },
-      { text: "Die Ziel-IP zeigt auf einen anderen Rechner.", options: ["Anwendung", "Transport", "Internet", "Netzzugang"], answer: 2, explanation: "Richtig: IP-Adressierung und Routing sind Aufgaben der Internetschicht." },
-      { text: "M.A.R.A. kennt den Befehl RETURNX nicht.", options: ["Anwendung", "Transport", "Internet", "Netzzugang"], answer: 0, explanation: "Richtig: Die Bedeutung der Protokollbefehle liegt in der Anwendungsschicht." },
-      { text: "Der WLAN-Frame kommt beschädigt am nächsten Gerät an.", options: ["Anwendung", "Transport", "Internet", "Netzzugang"], answer: 3, explanation: "Richtig: Der lokale Frame gehört zur Netzzugangsschicht." },
+      { text: "Der Rechner ist per Ping erreichbar. Trotzdem antwortet kein Programm auf dem erwarteten Kommunikationskanal.", options: ["Anwendung", "Transport", "Internet", "Netzzugang"], answer: 1, explanation: "Richtig: Der Rechnerweg funktioniert; der nicht erreichbare Programmkanal verweist auf die Transportschicht und ihren Port." },
+      { text: "Im lokalen WLAN ist alles stabil, aber jedes Paket wird am Router in das falsche Zielnetz weitergeleitet.", options: ["Anwendung", "Transport", "Internet", "Netzzugang"], answer: 2, explanation: "Richtig: Die Weiterleitung zwischen Netzen ist Aufgabe der Internetschicht." },
+      { text: "Verbindung und Zustellung funktionieren. Erst M.A.R.A. meldet „UNKNOWN_COMMAND“.", options: ["Anwendung", "Transport", "Internet", "Netzzugang"], answer: 0, explanation: "Richtig: Transport und Weg funktionieren; die Bedeutung des Befehls gehört zur Anwendung." },
+      { text: "Nur auf einem bestimmten Access Point treten fehlerhafte Prüfsummen in den Frames auf.", options: ["Anwendung", "Transport", "Internet", "Netzzugang"], answer: 3, explanation: "Richtig: Frames und die konkrete lokale Übertragung liegen im Netzzugang." },
+      { text: "M.A.R.A. erhält Daten doppelt und in falscher Reihenfolge, obwohl die Ziel-IP stimmt.", options: ["Anwendung", "Transport", "Internet", "Netzzugang"], answer: 1, explanation: "Richtig: Reihenfolge und zuverlässige Ende-zu-Ende-Übertragung sind Transportaufgaben." },
+      { text: "Nach einem Routerwechsel erreicht das Paket das richtige Zielnetz nicht mehr; lokale Frames bleiben fehlerfrei.", options: ["Anwendung", "Transport", "Internet", "Netzzugang"], answer: 2, explanation: "Richtig: Das Symptom grenzt den Fehler auf Routing und damit die Internetschicht ein." },
     ],
     log: [
       "Ein Fehler ist meist auf eine Schicht begrenzbar.",
@@ -385,10 +468,10 @@ const missions = [
     chapterNav: "03 · OSI-Transfer",
     title: "Sieben auf vier",
     story: "Das Labor dokumentiert nach dem siebenschichtigen OSI-Referenzmodell. Ordne die feineren OSI-Schichten dem TCP/IP-Modell zu.",
-    prompt: "Bilde die korrekte Zuordnung von sieben OSI- zu vier TCP/IP-Schichten.",
+    prompt: "Ordne OSI-Schichten und konkrete Laborbeobachtungen den vier TCP/IP-Bereichen zu.",
     state: "MODEL SYNC",
     type: "categorize",
-    instruction: "Tippe eine OSI-Schicht und danach den passenden TCP/IP-Bereich. Mehrere OSI-Schichten können gemeinsam in einem Bereich liegen.",
+    instruction: "Ordne zuerst die sieben OSI-Schichten. Übertrage danach dasselbe Prinzip auf sechs konkrete Aufgaben aus dem Laborbericht.",
     hint: "Vergleiche die Aufgaben beider Modelle. Suche zuerst die Schichten, deren Namen oder Kernaufgaben fast identisch sind; ordne danach die übrigen als Bündel zu.",
     success: "Modellabgleich vollständig: Das OSI-Modell beschreibt feiner, das TCP/IP-Modell fasst praktische Internetfunktionen zusammen.",
     buckets: [
@@ -405,6 +488,12 @@ const missions = [
       { id: "l3", label: "3 · Vermittlung", bucket: "internet" },
       { id: "l2", label: "2 · Sicherung", bucket: "link" },
       { id: "l1", label: "1 · Bitübertragung", bucket: "link" },
+      { id: "x1", label: "JSON darstellen & verschlüsseln", bucket: "app" },
+      { id: "x2", label: "Sitzung nach Abbruch fortsetzen", bucket: "app" },
+      { id: "x3", label: "Ende-zu-Ende über Port 5000", bucket: "transport" },
+      { id: "x4", label: "Paket über Router weiterleiten", bucket: "internet" },
+      { id: "x5", label: "WLAN-Frame gegen Fehler prüfen", bucket: "link" },
+      { id: "x6", label: "Bits als Funksignal übertragen", bucket: "link" },
     ],
     log: [
       "OSI ist ein Referenzmodell mit sieben getrennten Schichten.",
@@ -433,6 +522,7 @@ const elements = {
   missionChapter: $("#mission-chapter"),
   missionTitle: $("#mission-title"),
   missionStory: $("#mission-story"),
+  missionVoice: $("#mission-voice"),
   machineState: $("#machine-state"),
   puzzlePrompt: $("#puzzle-prompt"),
   puzzleArea: $("#puzzle-area"),
@@ -630,6 +720,8 @@ function renderMission() {
   elements.missionTitle.textContent = mission.title;
   elements.missionStory.textContent = mission.story;
   elements.machineState.textContent = mission.state;
+  elements.missionVoice.innerHTML = `<span>LIVE // ${escapeHtml(missionNarrative[mission.id].before)}</span>`;
+  elements.puzzleCard.dataset.mission = mission.id;
   elements.puzzlePrompt.textContent = mission.prompt;
   elements.feedback.className = "feedback hidden";
   elements.feedback.textContent = "";
@@ -645,7 +737,7 @@ function renderMission() {
   renderProgress();
 
   if (state.complete[state.current]) {
-    showFeedback(mission.success, "success");
+    showMissionSuccess(mission);
   }
 }
 
@@ -666,7 +758,13 @@ function renderLesson() {
   const read = state.lessons[state.current];
   elements.lessonTitle.textContent = lesson.title;
   elements.lessonVisual.innerHTML = lessonVisual(lesson.kind);
-  elements.lessonCopy.innerHTML = `<p>${escapeHtml(lesson.intro)}</p><ul class="lesson-points">${lesson.points.map((point) => `<li>${escapeHtml(point)}</li>`).join("")}</ul>`;
+  elements.lessonCopy.innerHTML = `
+    <p>${escapeHtml(lesson.intro)}</p>
+    <ul class="lesson-points">${lesson.points.map((point) => `<li>${escapeHtml(point)}</li>`).join("")}</ul>
+    <div class="lesson-context"><small>WARUM DAS WICHTIG IST</small><p>${escapeHtml(lesson.why)}</p></div>
+    <div class="lesson-example"><small>ALLTAGSVERGLEICH</small><p>${escapeHtml(lesson.example)}</p></div>
+    <div class="mission-question"><small>DEINE LEITFRAGE</small><strong>${escapeHtml(lesson.question)}</strong></div>
+  `;
   elements.lessonConfirm.classList.toggle("done", read);
   elements.lessonConfirm.querySelector("span").textContent = read ? "Einsatzwissen aktiviert" : "Analyse abschließen und Aufgabe öffnen";
   elements.puzzleCard.classList.toggle("unlocked", read);
@@ -682,8 +780,8 @@ function confirmLesson() {
 
 function renderSignal() {
   const value = state.signals[state.current];
-  elements.signalMeter.innerHTML = Array.from({ length: 3 }, (_, i) => `<span class="signal-cell${i < value ? " on" : ""}"></span>`).join("");
-  elements.signalMeter.setAttribute("aria-label", `Signalqualität: ${value} von 3`);
+  elements.signalMeter.innerHTML = `<span class="signal-caption">Verbindungsstabilität</span>${Array.from({ length: 3 }, (_, i) => `<span class="signal-cell${i < value ? " on" : ""}"></span>`).join("")}`;
+  elements.signalMeter.setAttribute("aria-label", `Verbindungsstabilität: ${value} von 3. Denkanstöße sind kostenlos.`);
 }
 
 function renderPuzzle() {
@@ -726,7 +824,7 @@ function renderCategorize(mission) {
     </div>
     <div class="bucket-grid">
       ${mission.buckets.map((bucket) => `
-        <section class="bucket${interaction.selected ? " active" : ""}" data-bucket="${bucket.id}">
+        <section class="bucket${interaction.selected ? " active" : ""}" data-bucket="${bucket.id}" role="button" tabindex="0" aria-label="${bucket.label}: ausgewählte Karte hier ablegen">
           <h3>${bucket.label}</h3>
           <div class="bucket-cards">
             ${mission.tokens.filter((token) => interaction.assignments[token.id] === bucket.id).map((token) => `<button class="bucket-card" type="button" data-return="${token.id}" title="Zurücklegen">${token.label}</button>`).join("")}
@@ -744,6 +842,14 @@ function renderCategorize(mission) {
     interaction.assignments[interaction.selected] = bucket.dataset.bucket;
     interaction.selected = null;
     renderCategorize(mission);
+  }));
+  $$('[data-bucket]').forEach((bucket) => bucket.addEventListener("keydown", (event) => {
+    if ((event.key === "Enter" || event.key === " ") && interaction.selected) {
+      event.preventDefault();
+      interaction.assignments[interaction.selected] = bucket.dataset.bucket;
+      interaction.selected = null;
+      renderCategorize(mission);
+    }
   }));
   $$('[data-return]').forEach((button) => button.addEventListener("click", () => {
     delete interaction.assignments[button.dataset.return];
@@ -846,6 +952,7 @@ function sendDialogueMessage(mission, rawCommand) {
   if (!command) return;
   interaction.history.push({ who: "TEAM7", type: "client", message: command });
   const response = dialogueReply(mission.id, command);
+  if (response.startsWith("ERR:")) interaction.flags.error = true;
   interaction.history.push({ who: "M.A.R.A.", type: "mara", message: response });
   const config = dialogueConfigs[mission.id];
   const finished = config.goals.every(([key]) => interaction.flags[key]);
@@ -874,6 +981,12 @@ function showFeedback(message, kind) {
   elements.feedback.className = `feedback ${kind}`;
 }
 
+function showMissionSuccess(mission) {
+  elements.feedback.innerHTML = `<strong>Mission gelöst.</strong><span>${escapeHtml(mission.success)}</span><em>${escapeHtml(missionNarrative[mission.id].after)}</em>`;
+  elements.feedback.className = "feedback success mission-debrief";
+  elements.missionVoice.innerHTML = `<span>LIVE // ${escapeHtml(missionNarrative[mission.id].after)}</span>`;
+}
+
 function reduceSignal() {
   state.signals[state.current] = Math.max(1, state.signals[state.current] - 1);
   saveState();
@@ -896,7 +1009,9 @@ function checkSequence(mission) {
   if (correct) completeMission();
   else {
     reduceSignal();
-    showFeedback("Die Bausteine sind vollständig, aber ihre Reihenfolge passt noch nicht zum Ablauf. Prüfe Abhängigkeiten und Antworten.", "error");
+    const firstMismatch = interaction.order.findIndex((id, index) => id !== mission.sequence[index].id);
+    const confirmed = firstMismatch === 0 ? "Schon der erste Schritt braucht eine andere Aufgabe." : `Die ersten ${firstMismatch} Schritte stimmen bereits.`;
+    showFeedback(`${confirmed} Prüfe jetzt, welche Information als Nächstes benötigt wird – die konkrete Lösung bleibt bei dir.`, "error");
   }
 }
 
@@ -910,7 +1025,8 @@ function checkCategorize(mission) {
   if (!wrong.length) completeMission();
   else {
     reduceSignal();
-    showFeedback(`${wrong.length} Zuordnung(en) passen noch nicht. Tippe abgelegte Karten an, um sie neu einzuordnen.`, "error");
+    const correctCount = mission.tokens.length - wrong.length;
+    showFeedback(`${correctCount} von ${mission.tokens.length} Zuordnungen stimmen bereits. Suche bei den übrigen Karten nach dem tatsächlichen Ziel oder Aufgabenbereich.`, "error");
   }
 }
 
@@ -922,7 +1038,7 @@ function checkQuiz(mission) {
   const question = mission.questions[interaction.question];
   if (interaction.selected !== question.answer) {
     reduceSignal();
-    showFeedback("Diese Antwort passt noch nicht zum beschriebenen Fehler. Nutze Fachbegriff und Gesprächszustand als Hinweis.", "error");
+    showFeedback("Noch nicht. Streiche gedanklich zuerst alle Ebenen, die laut Situation bereits funktionieren, und entscheide dann zwischen den verbleibenden.", "error");
     return;
   }
 
@@ -945,7 +1061,7 @@ function completeMission() {
   elements.next.classList.remove("hidden");
   elements.next.textContent = state.current === missions.length - 1 ? "Einsatzbericht" : "Nächste Mission";
   elements.hint.disabled = true;
-  showFeedback(missions[state.current].success, "success");
+  showMissionSuccess(missions[state.current]);
   renderProgress();
   renderNav();
   if (!wasComplete && state.complete.every(Boolean)) showCompletion();
@@ -955,9 +1071,9 @@ function showHint() {
   const mission = missions[state.current];
   if (!state.hints[state.current]) {
     state.hints[state.current] = true;
-    reduceSignal();
+    saveState();
   }
-  showFeedback(mission.hint, "hint");
+  showFeedback(`${mission.hint} Denkanstöße verändern deine Verbindungsstabilität nicht.`, "hint");
 }
 
 function goNext() {
