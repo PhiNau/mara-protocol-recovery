@@ -31,6 +31,122 @@ const prologueScenes = [
   },
 ];
 
+const academyModules = [
+  {
+    id: "why",
+    kicker: "Das Grundproblem",
+    title: "Warum Kommunikation Schichten braucht",
+    lead: "Eine Nachricht muss verstanden, einem Programm zugestellt, durch mehrere Netze geleitet und über ein konkretes Medium übertragen werden. Keine einzelne Regel kann all das sinnvoll zugleich lösen.",
+    visual: "analogy",
+    sections: [
+      ["Eine große Aufgabe wird teilbar", "Das Schichtenmodell zerlegt Kommunikation in überschaubare Teilprobleme. Eine Schicht kümmert sich jeweils um eine bestimmte Art von Aufgabe und stellt der darüberliegenden Schicht einen Dienst bereit."],
+      ["Austauschbare Technik", "Die Anwendung muss nicht wissen, ob die Bits später über WLAN, Glasfaser oder ein Kupferkabel laufen. Solange die Grenze zwischen den Schichten gleich bleibt, kann eine Schicht ausgetauscht werden, ohne alles andere neu zu erfinden."],
+      ["Sender und Empfänger spiegeln sich", "Beim Sender wandert die Nachricht von oben nach unten. Beim Empfänger läuft der Weg umgekehrt: vom Signal zurück zur Bedeutung für die Anwendung."],
+    ],
+    takeaway: "Schichten trennen Verantwortlichkeiten. Dadurch werden Netzwerke planbar, austauschbar und leichter zu reparieren.",
+  },
+  {
+    id: "stack",
+    kicker: "Vier Ebenen im Internet",
+    title: "Das TCP/IP-Modell im Überblick",
+    lead: "Für das Internet genügt häufig ein Modell mit vier Schichten. Jede Schicht hat eigene Aufgaben, eigene Begriffe und eine eigene Sicht auf dieselben Daten.",
+    visual: "stack",
+    sections: [
+      ["Anwendungsschicht", "Hier leben die Regeln einer konkreten Anwendung: Chatbefehle, Webseiten, E-Mail oder M.A.R.A.s RETURN:LAB. Die Schicht kennt die Bedeutung der Nutzdaten."],
+      ["Transportschicht", "Sie verbindet Prozesse auf Endgeräten. Ports unterscheiden Programme; TCP kann Reihenfolge, Bestätigung und erneute Übertragung organisieren."],
+      ["Internetschicht", "IP-Adressen und Routing bringen Pakete durch mehrere Netze zum richtigen Zielrechner. Router arbeiten vor allem auf dieser Ebene."],
+      ["Netzzugangsschicht", "Sie überträgt Frames im jeweils lokalen Netzabschnitt – etwa über Ethernet oder WLAN. Dazu gehören MAC-Adressen, Prüfsummen und die physische Signalübertragung."],
+    ],
+    takeaway: "Oben geht es um Bedeutung, darunter um Programmzustellung, dann um den Rechnerweg und ganz unten um den lokalen Transport.",
+  },
+  {
+    id: "encapsulation",
+    kicker: "Senderseite",
+    title: "Kapselung: Die Nachricht bekommt Hüllen",
+    lead: "Jede Schicht ergänzt genau die Steuerinformationen, die sie für ihre Aufgabe benötigt. Die vorherigen Daten werden dabei zur Nutzlast der nächsten Schicht.",
+    visual: "encapsulation",
+    sections: [
+      ["1 · Anwendungsdaten", "M.A.R.A.s Protokoll erzeugt RETURN:LAB. Für die Anwendung ist die Bedeutung klar; ein Netzwerk könnte damit allein aber noch nichts zustellen."],
+      ["2 · TCP-Segment", "TCP ergänzt unter anderem Quell- und Zielport sowie Sequenzinformationen. Damit kann das Zielgerät die Daten dem richtigen Prozess und der richtigen Reihenfolge zuordnen."],
+      ["3 · IP-Paket", "IP ergänzt Quell- und Ziel-IP. Router lesen diese Hülle, um das Paket schrittweise durch verschiedene Netze weiterzuleiten."],
+      ["4 · Frame", "Für den nächsten lokalen Abschnitt entsteht ein Frame mit lokalen Adressen und Prüfinformationen. Am nächsten Router kann diese äußerste Hülle durch eine neue ersetzt werden."],
+    ],
+    takeaway: "Kapselung verändert die ursprüngliche Nachricht nicht. Sie legt mehrere zweckgebundene Steuerhüllen darum.",
+  },
+  {
+    id: "decapsulation",
+    kicker: "Empfängerseite",
+    title: "Entkapselung: Hülle für Hülle zur Bedeutung",
+    lead: "Am Ziel wird der Vorgang umgekehrt. Jede Schicht liest nur die Informationen, die für sie bestimmt sind, und gibt die verbleibende Nutzlast nach oben weiter.",
+    visual: "decapsulation",
+    sections: [
+      ["Frame prüfen", "Die Netzzugangsschicht kontrolliert die lokale Übertragung und entfernt die Rahmeninformationen."],
+      ["IP-Ziel prüfen", "Die Internetschicht erkennt, dass das Paket für diesen Rechner bestimmt ist, und reicht seine Nutzlast weiter."],
+      ["Port und Reihenfolge prüfen", "Die Transportschicht setzt Daten gegebenenfalls zusammen und liefert sie an das Programm, das am Zielport wartet."],
+      ["Befehl interpretieren", "Erst die Anwendung versteht RETURN:LAB als fachlichen Befehl und kann eine Aktion auslösen."],
+    ],
+    takeaway: "Eine Schicht muss den Inhalt tieferer oder höherer Protokolle nicht vollständig verstehen – nur ihre eigene Hülle.",
+  },
+  {
+    id: "addresses",
+    kicker: "Wer soll die Daten bekommen?",
+    title: "MAC, IP, Port und Protokollrolle auseinanderhalten",
+    lead: "Netzwerke verwenden mehrere Arten von Identifikatoren, weil auf jeder Ebene ein anderes Ziel gemeint ist.",
+    visual: "addresses",
+    sections: [
+      ["MAC-Adresse · nächster lokaler Schritt", "Sie bezeichnet eine Netzwerkschnittstelle im lokalen Abschnitt. Beim Übergang über einen Router ändern sich die MAC-Adressen des Frames."],
+      ["IP-Adresse · Zielrechner über Netzgrenzen", "Sie bleibt normalerweise auf dem Weg erhalten und ermöglicht Routing durch viele miteinander verbundene Netze."],
+      ["Port · Zielprozess", "Mehrere Programme nutzen denselben Rechner. Der Port entscheidet, welcher Dienst die Daten erhält."],
+      ["Anwendungsprotokoll · Bedeutung", "Erst die Anwendung weiß, ob die Nutzdaten einen Chattext, eine Webseitenanfrage oder einen Maschinenbefehl darstellen."],
+    ],
+    takeaway: "MAC findet den nächsten lokalen Empfänger, IP den Zielrechner, Port das Zielprogramm und das Anwendungsprotokoll die Bedeutung.",
+  },
+  {
+    id: "journey",
+    kicker: "Ende-zu-Ende-Reise",
+    title: "Was unterwegs gleich bleibt – und was sich ändert",
+    lead: "M.A.R.A.s Paket passiert einen Access Point und zwei Router. Nicht jede Hülle besitzt dabei dieselbe Lebensdauer.",
+    visual: "journey",
+    sections: [
+      ["An den Endgeräten", "Anwendung und Transport arbeiten im Wesentlichen Ende zu Ende: M.A.R.A. spricht mit dem Laborprogramm."],
+      ["An Routern", "Router interessieren sich für die IP-Zieladresse. Sie entfernen den eingehenden lokalen Frame und bauen für den nächsten Netzabschnitt einen neuen."],
+      ["Auf jedem Teilstück", "WLAN, Ethernet oder Glasfaser können aufeinanderfolgen. Das IP-Paket kann diese unterschiedlichen lokalen Techniken überqueren."],
+    ],
+    takeaway: "Der lokale Frame wechselt an jedem Router. Ziel-IP, Ports und Anwendungsdaten reisen grundsätzlich weiter bis zum Ziel.",
+  },
+  {
+    id: "diagnostics",
+    kicker: "Reparaturstrategie",
+    title: "Fehler Schicht für Schicht eingrenzen",
+    lead: "Das Schichtenmodell ist kein bloßes Schaubild. Es ist ein Werkzeug, um aus einem Symptom eine sinnvolle Prüfstrategie abzuleiten.",
+    visual: "diagnostics",
+    sections: [
+      ["Von unten nach oben prüfen", "Kommt überhaupt ein Signal oder Frame an? Ist der Zielrechner per IP erreichbar? Antwortet der erwartete Port? Versteht die Anwendung den Befehl?"],
+      ["Beobachtungen statt Vermutungen", "Ein erfolgreicher Ping beweist nicht, dass ein Dienstport offen ist. Eine TCP-Verbindung beweist nicht, dass die Anwendung den Inhalt versteht."],
+      ["Grenzen bewusst nutzen", "Jeder erfolgreiche Test schließt bestimmte Fehlerquellen aus. So wird aus einem großen Problem eine kleine Menge plausibler Ursachen."],
+    ],
+    takeaway: "Diagnose bedeutet: erst feststellen, welche Schichten funktionieren, und dann die erste fehlerhafte Grenze untersuchen.",
+  },
+];
+
+const academyCheckpoint = [
+  {
+    text: "Ein Chatbefehl erreicht den richtigen Rechner und Port, wird dort aber nicht verstanden. Welche Ebene prüfst du?",
+    options: ["Anwendung", "Transport", "Internet", "Netzzugang"],
+    answer: 0,
+  },
+  {
+    text: "Welche Information kann sich an jedem Router für den nächsten lokalen Abschnitt ändern?",
+    options: ["Anwendungsbefehl", "Zielport", "IP-Ziel", "Frame-/MAC-Information"],
+    answer: 3,
+  },
+  {
+    text: "In welcher Reihenfolge kapselt ein Sender die Nachricht?",
+    options: ["Daten → Segment → Paket → Frame", "Frame → Paket → Segment → Daten", "Paket → Daten → Frame → Segment"],
+    answer: 0,
+  },
+];
+
 const lessons = {
   trace: {
     title: "Wie Protokolle Nachrichten lesbar machen",
@@ -515,6 +631,7 @@ const $$ = (selector) => [...document.querySelectorAll(selector)];
 const elements = {
   prologue: $("#prologue-view"),
   hero: $("#hero-view"),
+  academy: $("#academy-view"),
   mission: $("#mission-view"),
   nav: $("#mission-nav"),
   progressLabel: $("#progress-label"),
@@ -539,6 +656,18 @@ const elements = {
   lessonCopy: $("#lesson-copy"),
   lessonConfirm: $("#lesson-confirm"),
   puzzleCard: $("#puzzle-card"),
+  academyNav: $("#academy-nav"),
+  academyCompletion: $("#academy-completion"),
+  academyNumber: $("#academy-module-number"),
+  academyKicker: $("#academy-kicker"),
+  academyTitle: $("#academy-title"),
+  academyLead: $("#academy-lead"),
+  academyVisual: $("#academy-visual"),
+  academyBody: $("#academy-body"),
+  academyInteraction: $("#academy-interaction"),
+  academyFeedback: $("#academy-feedback"),
+  academyPrev: $("#academy-prev"),
+  academyNext: $("#academy-next"),
 };
 
 const blankState = () => ({
@@ -549,6 +678,8 @@ const blankState = () => ({
   hints: Array(missions.length).fill(false),
   lessons: Array(missions.length).fill(false),
   prologueSeen: false,
+  academyModules: Array(academyModules.length).fill(false),
+  layerCourseComplete: false,
 });
 
 function loadState() {
@@ -562,6 +693,8 @@ function loadState() {
       signals: missions.map((_, index) => Math.max(1, Math.min(3, Number(stored.signals?.[index]) || 3))),
       hints: missions.map((_, index) => Boolean(stored.hints?.[index])),
       lessons: missions.map((_, index) => Boolean(stored.lessons?.[index] || stored.complete?.[index])),
+      academyModules: academyModules.map((_, index) => Boolean(stored.academyModules?.[index] || stored.layerCourseComplete)),
+      layerCourseComplete: Boolean(stored.layerCourseComplete),
     };
   } catch {
     return blankState();
@@ -572,6 +705,9 @@ let state = loadState();
 let interaction = {};
 let activeIntel = "log";
 let sceneIndex = 0;
+let academyIndex = 0;
+let academyTargetMission = null;
+let academyInteraction = {};
 
 function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -603,6 +739,18 @@ function renderNav() {
       heading.className = "nav-chapter";
       heading.textContent = mission.chapterNav;
       elements.nav.append(heading);
+      if (mission.chapterNav.startsWith("02")) {
+        const courseButton = document.createElement("button");
+        courseButton.type = "button";
+        courseButton.className = `mission-button academy-nav-button${state.layerCourseComplete ? " completed" : ""}`;
+        courseButton.innerHTML = `
+          <span class="mission-index">${state.layerCourseComplete ? "✓" : "↗"}</span>
+          <span class="mission-label">Grundkurs Schichtenmodell</span>
+          <span class="nav-status">${state.layerCourseComplete ? icon("check") : ""}</span>
+        `;
+        courseButton.addEventListener("click", () => openAcademy(null));
+        elements.nav.append(courseButton);
+      }
       lastChapter = mission.chapterNav;
     }
 
@@ -624,6 +772,7 @@ function renderNav() {
 
 function showHero() {
   elements.prologue.classList.add("hidden");
+  elements.academy.classList.add("hidden");
   elements.hero.classList.remove("hidden");
   elements.mission.classList.add("hidden");
   renderNav();
@@ -655,6 +804,7 @@ function showPrologue() {
   sceneIndex = 0;
   elements.prologue.classList.remove("hidden");
   elements.hero.classList.add("hidden");
+  elements.academy.classList.add("hidden");
   elements.mission.classList.add("hidden");
   renderScene();
   renderNav();
@@ -665,6 +815,262 @@ function finishPrologue() {
   state.prologueSeen = true;
   saveState();
   showHero();
+}
+
+function initializeAcademyInteraction(module, completed = false) {
+  const all = {
+    why: ["meaning", "process", "route", "medium"],
+    stack: ["app", "transport", "internet", "link"],
+    encapsulation: [0, 1, 2, 3],
+    decapsulation: [0, 1, 2, 3],
+    addresses: ["mac", "ip", "port", "protocol"],
+    journey: [0, 1, 2, 3, 4],
+  };
+  academyInteraction = {
+    module: module.id,
+    seen: new Set(completed ? (all[module.id] || []) : []),
+    active: module.id === "stack" ? "app" : module.id === "addresses" ? "mac" : 0,
+    checkpoint: 0,
+    selected: null,
+    checkpointDone: completed && module.id === "diagnostics",
+    optionOrders: academyCheckpoint.map((question) => shuffle(question.options.map((_, index) => index))),
+  };
+}
+
+function academyVisual(module) {
+  const active = academyInteraction.active;
+  if (module.visual === "analogy") {
+    return `<div class="academy-analogy">
+      <div class="analogy-column"><small>NETZWERK</small><strong>RETURN:LAB</strong><span>Anwendung versteht den Befehl</span><span>Transport findet das Programm</span><span>IP findet den Rechnerweg</span><span>WLAN überträgt lokal</span></div>
+      <div class="analogy-bridge">↔<em>gleiche Idee</em></div>
+      <div class="analogy-column mail"><small>PAKETDIENST</small><strong>Inhalt</strong><span>Abteilung wählt Empfänger</span><span>Adresse findet das Gebäude</span><span>Transporter fährt Teilstrecke</span><span>Medium bewegt das Paket</span></div>
+    </div>`;
+  }
+  if (module.visual === "stack") {
+    return `<div class="academy-stack">
+      <button class="academy-layer app${active === "app" ? " active" : ""}" data-study="app"><b>4</b><span><strong>Anwendung</strong><small>Was bedeuten die Daten?</small></span><em>Nachricht</em></button>
+      <button class="academy-layer transport${active === "transport" ? " active" : ""}" data-study="transport"><b>3</b><span><strong>Transport</strong><small>Welches Programm? Vollständig?</small></span><em>Segment</em></button>
+      <button class="academy-layer internet${active === "internet" ? " active" : ""}" data-study="internet"><b>2</b><span><strong>Internet</strong><small>Welcher Rechnerweg?</small></span><em>Paket</em></button>
+      <button class="academy-layer link${active === "link" ? " active" : ""}" data-study="link"><b>1</b><span><strong>Netzzugang</strong><small>Wie über die lokale Strecke?</small></span><em>Frame / Bits</em></button>
+    </div>`;
+  }
+  if (module.visual === "encapsulation") {
+    return `<div class="packet-workbench sending">
+      <div class="packet-caption">SENDER · VON INNEN NACH AUSSEN</div>
+      <div class="packet-nested">
+        ${active >= 3 ? '<div class="packet-shell frame"><label>FRAME-HEADER</label>' : ""}
+        ${active >= 2 ? '<div class="packet-shell ip"><label>IP-HEADER</label>' : ""}
+        ${active >= 1 ? '<div class="packet-shell tcp"><label>TCP-HEADER</label>' : ""}
+        <div class="packet-shell data"><label>DATEN</label><strong>RETURN:LAB</strong></div>
+        ${active >= 1 ? "</div>" : ""}${active >= 2 ? "</div>" : ""}${active >= 3 ? "</div>" : ""}
+      </div>
+      <div class="packet-legend"><span>Je größer die Hülle, desto tiefer die Schicht.</span></div>
+    </div>`;
+  }
+  if (module.visual === "decapsulation") {
+    const remaining = 3 - Number(active);
+    return `<div class="packet-workbench receiving">
+      <div class="packet-caption">EMPFÄNGER · VON AUSSEN NACH INNEN</div>
+      <div class="peel-stack">
+        <div class="peel-layer frame${remaining < 3 ? " removed" : ""}"><strong>Frame</strong><span>${remaining < 3 ? "✓ geprüft und entfernt" : "lokale Prüfsumme & MAC"}</span></div>
+        <div class="peel-layer ip${remaining < 2 ? " removed" : ""}"><strong>IP-Paket</strong><span>${remaining < 2 ? "✓ Zielrechner erkannt" : "Quell- & Ziel-IP"}</span></div>
+        <div class="peel-layer tcp${remaining < 1 ? " removed" : ""}"><strong>TCP-Segment</strong><span>${remaining < 1 ? "✓ an Port zugestellt" : "Ports & Reihenfolge"}</span></div>
+        <div class="peel-layer data"><strong>RETURN:LAB</strong><span>${active >= 3 ? "Anwendung versteht den Befehl" : "noch verpackte Nutzdaten"}</span></div>
+      </div>
+    </div>`;
+  }
+  if (module.visual === "addresses") {
+    return `<div class="address-map">
+      <div class="endpoint mara"><span>M.A.R.A.</span><small>10.0.0.7</small></div>
+      <div class="network-hop"><i></i><strong>Access Point</strong><small>lokaler Frame</small></div>
+      <div class="network-hop router"><i></i><strong>Router</strong><small>IP-Weiterleitung</small></div>
+      <div class="endpoint lab"><span>Laborserver</span><small>203.0.113.9 : 5000</small></div>
+      <div class="address-flow"><span>MAC nur bis zum nächsten Hop</span><span>IP bis zum Zielrechner</span><span>Port bis zum Zielprogramm</span></div>
+    </div>`;
+  }
+  if (module.visual === "journey") {
+    const steps = ["M.A.R.A.", "WLAN-AP", "Router A", "Router B", "Labor"];
+    return `<div class="journey-map">${steps.map((label, index) => `<div class="journey-node${index <= active ? " active" : ""}"><b>${index + 1}</b><span>${label}</span>${index < steps.length - 1 ? '<i>→</i>' : ""}</div>`).join("")}</div>
+      <div class="journey-facts"><span>RETURN:LAB · bleibt gleich</span><span>Port 5000 · bleibt gleich</span><span>Ziel-IP · bleibt gleich</span><span>Frame/MAC · wird pro Teilstrecke neu</span></div>`;
+  }
+  return `<div class="diagnostic-console">
+    <div class="diagnostic-line good"><span>01</span><strong>Frame empfangen</strong><em>Netzzugang wahrscheinlich intakt</em></div>
+    <div class="diagnostic-line good"><span>02</span><strong>Ping erfolgreich</strong><em>IP-Weg grundsätzlich intakt</em></div>
+    <div class="diagnostic-line warn"><span>03</span><strong>Port 5000 antwortet nicht</strong><em>Transport/Dienst untersuchen</em></div>
+    <div class="diagnostic-line"><span>04</span><strong>Protokollantwort ausstehend</strong><em>erst nach Verbindung prüfen</em></div>
+  </div>`;
+}
+
+function renderAcademyBody(module) {
+  elements.academyBody.innerHTML = `
+    <div class="academy-explanations">${module.sections.map(([title, text]) => `<section><h3>${escapeHtml(title)}</h3><p>${escapeHtml(text)}</p></section>`).join("")}</div>
+    <aside class="academy-takeaway"><small>MERKSATZ</small><strong>${escapeHtml(module.takeaway)}</strong></aside>
+  `;
+}
+
+function renderAcademyInteraction(module) {
+  const seen = academyInteraction.seen;
+  if (module.id === "why") {
+    const items = [
+      ["meaning", "Bedeutung", "Die Anwendung versteht RETURN:LAB."],
+      ["process", "Programm", "Der Port führt zum richtigen Dienst."],
+      ["route", "Rechnerweg", "IP und Router finden den Zielrechner."],
+      ["medium", "Teilstrecke", "WLAN oder Ethernet bewegen den Frame lokal."],
+    ];
+    elements.academyInteraction.innerHTML = `<h3>Vier Verantwortlichkeiten aufdecken</h3><p>Öffne alle Karten und achte darauf, dass jede Frage ein anderes Ziel hat.</p><div class="study-card-grid">${items.map(([id, title, text]) => `<button class="study-reveal${seen.has(id) ? " revealed" : ""}" data-study="${id}"><strong>${title}</strong><span>${seen.has(id) ? text : "Aufdecken"}</span></button>`).join("")}</div>`;
+  } else if (module.id === "stack") {
+    const info = {
+      app: ["Anwendung", "Protokolle: HTTP, DNS, Chat, M.A.R.A. · Einheit: Nachricht"],
+      transport: ["Transport", "Protokolle: TCP oder UDP · Einheit: Segment/Datagramm"],
+      internet: ["Internet", "Protokoll: IP · Geräte: Router · Einheit: Paket"],
+      link: ["Netzzugang", "Techniken: Ethernet, WLAN · Einheit: Frame und Bits"],
+    }[academyInteraction.active];
+    elements.academyInteraction.innerHTML = `<h3>Schichtenscanner</h3><p>Tippe im Schaubild jede Schicht an. Der Scanner zeigt typische Protokolle und Dateneinheiten.</p><div class="layer-readout"><small>AKTIVE SCHICHT</small><strong>${info[0]}</strong><span>${info[1]}</span></div><div class="seen-meter">${["app", "transport", "internet", "link"].map((id) => `<i class="${seen.has(id) ? "seen" : ""}"></i>`).join("")}<span>${seen.size} / 4 untersucht</span></div>`;
+  } else if (["encapsulation", "decapsulation"].includes(module.id)) {
+    const labels = module.id === "encapsulation"
+      ? ["Anwendungsdaten", "TCP ergänzen", "IP ergänzen", "Frame ergänzen"]
+      : ["Frame entfernen", "IP auswerten", "TCP auswerten", "Anwendung erhält Daten"];
+    elements.academyInteraction.innerHTML = `<h3>${module.id === "encapsulation" ? "Verpackungsregler" : "Entpackungsregler"}</h3><p>Gehe die Verarbeitung in vier Schritten durch und beobachte, welche Informationen hinzukommen oder verschwinden.</p><div class="step-controls">${labels.map((label, index) => `<button class="step-control${academyInteraction.active === index ? " active" : ""}${seen.has(index) ? " seen" : ""}" data-study="${index}"><b>${index + 1}</b>${label}</button>`).join("")}</div>`;
+  } else if (module.id === "addresses") {
+    const items = {
+      mac: ["MAC / Frame", "Nächste Schnittstelle im lokalen Netzabschnitt; wird an Routern neu gesetzt."],
+      ip: ["IP-Adresse", "Zielrechner über Netzgrenzen hinweg; wird von Routern für die Wegwahl gelesen."],
+      port: ["Port", "Zielprozess auf dem Endgerät, zum Beispiel Laborsoftware auf Port 5000."],
+      protocol: ["Anwendungsprotokoll", "Bedeutung der Nutzdaten, zum Beispiel STATUS oder RETURN:LAB."],
+    };
+    elements.academyInteraction.innerHTML = `<h3>Adressdetektor</h3><p>Untersuche alle vier Kennzeichnungen. Formuliere dabei jeweils: „Diese Angabe findet …“</p><div class="address-tabs">${Object.entries(items).map(([id, [title]]) => `<button class="${academyInteraction.active === id ? " active" : ""}" data-study="${id}">${title}</button>`).join("")}</div><div class="address-readout"><strong>${items[academyInteraction.active][0]}</strong><p>${items[academyInteraction.active][1]}</p></div><div class="seen-meter">${Object.keys(items).map((id) => `<i class="${seen.has(id) ? "seen" : ""}"></i>`).join("")}<span>${seen.size} / 4 untersucht</span></div>`;
+  } else if (module.id === "journey") {
+    const notes = [
+      "M.A.R.A. kapselt den Befehl vollständig. Der erste Frame ist für den Access Point bestimmt.",
+      "Der Access Point transportiert den Frame im lokalen Netz; das enthaltene IP-Ziel bleibt erhalten.",
+      "Router A entfernt den alten Frame, liest die Ziel-IP und erzeugt einen neuen Frame für den nächsten Hop.",
+      "Router B wiederholt diesen Vorgang. Ports und Anwendungsdaten bleiben weiterhin Teil der Nutzlast.",
+      "Der Laborserver entkapselt bis zur Anwendung. Erst dort wird RETURN:LAB wieder als Befehl verstanden.",
+    ];
+    elements.academyInteraction.innerHTML = `<h3>Paketreise abspielen</h3><p>Verfolge dasselbe Paket über fünf Stationen.</p><div class="journey-controls">${notes.map((_, index) => `<button class="${academyInteraction.active === index ? " active" : ""}${seen.has(index) ? " seen" : ""}" data-study="${index}">${index + 1}</button>`).join("")}</div><div class="journey-note">${notes[academyInteraction.active]}</div>`;
+  } else {
+    const question = academyCheckpoint[academyInteraction.checkpoint];
+    const order = academyInteraction.optionOrders[academyInteraction.checkpoint];
+    elements.academyInteraction.innerHTML = academyInteraction.checkpointDone
+      ? `<div class="checkpoint-complete"><strong>Grundwissen bestätigt</strong><p>Du kannst die vier Schichten unterscheiden, Kapselung erklären und erste Fehler eingrenzen.</p></div>`
+      : `<h3>Abschluss-Checkpoint ${academyInteraction.checkpoint + 1} / ${academyCheckpoint.length}</h3><p class="checkpoint-question">${question.text}</p><div class="checkpoint-options">${order.map((index) => `<button class="${academyInteraction.selected === index ? " selected" : ""}" data-checkpoint-option="${index}">${question.options[index]}</button>`).join("")}</div><button class="secondary-button checkpoint-check" id="checkpoint-check" type="button">Antwort prüfen</button>`;
+  }
+
+  $$('[data-study]').forEach((button) => button.addEventListener("click", () => {
+    const raw = button.dataset.study;
+    const value = /^\d+$/.test(raw) ? Number(raw) : raw;
+    academyInteraction.active = value;
+    academyInteraction.seen.add(value);
+    elements.academyVisual.innerHTML = academyVisual(module);
+    renderAcademyInteraction(module);
+  }));
+  $$('[data-checkpoint-option]').forEach((button) => button.addEventListener("click", () => {
+    academyInteraction.selected = Number(button.dataset.checkpointOption);
+    renderAcademyInteraction(module);
+  }));
+  const checkButton = $("#checkpoint-check");
+  if (checkButton) checkButton.addEventListener("click", checkAcademyCheckpoint);
+}
+
+function academyRequirementMet(module) {
+  const needed = { why: 4, stack: 4, encapsulation: 4, decapsulation: 4, addresses: 4, journey: 5 };
+  if (module.id === "diagnostics") return academyInteraction.checkpointDone;
+  return academyInteraction.seen.size >= needed[module.id];
+}
+
+function checkAcademyCheckpoint() {
+  if (academyInteraction.selected === null) {
+    showAcademyFeedback("Wähle zuerst eine Antwort aus.", "error");
+    return;
+  }
+  const question = academyCheckpoint[academyInteraction.checkpoint];
+  if (academyInteraction.selected !== question.answer) {
+    showAcademyFeedback("Noch nicht. Nutze das Ausschlussprinzip: Welche Informationen funktionieren laut Beschreibung bereits?", "error");
+    return;
+  }
+  if (academyInteraction.checkpoint === academyCheckpoint.length - 1) {
+    academyInteraction.checkpointDone = true;
+    renderAcademyInteraction(academyModules[academyIndex]);
+    showAcademyFeedback("Checkpoint bestanden. Dein Grundwissen ist einsatzbereit.", "success");
+  } else {
+    academyInteraction.checkpoint += 1;
+    academyInteraction.selected = null;
+    renderAcademyInteraction(academyModules[academyIndex]);
+    showAcademyFeedback("Richtig. Weiter zur nächsten Transferfrage.", "success");
+  }
+}
+
+function showAcademyFeedback(message, kind) {
+  elements.academyFeedback.textContent = message;
+  elements.academyFeedback.className = `academy-feedback ${kind}`;
+}
+
+function renderAcademyNav() {
+  elements.academyNav.innerHTML = academyModules.map((module, index) => {
+    const unlocked = index === 0 || state.academyModules[index - 1] || state.layerCourseComplete;
+    return `<button type="button" data-academy-index="${index}" class="${index === academyIndex ? "active" : ""}${state.academyModules[index] ? " complete" : ""}" ${unlocked ? "" : "disabled"}><span>${state.academyModules[index] ? "✓" : String(index + 1).padStart(2, "0")}</span>${module.title}</button>`;
+  }).join("");
+  $$('[data-academy-index]').forEach((button) => button.addEventListener("click", () => {
+    academyIndex = Number(button.dataset.academyIndex);
+    initializeAcademyInteraction(academyModules[academyIndex], state.academyModules[academyIndex]);
+    renderAcademy();
+  }));
+}
+
+function renderAcademy() {
+  const module = academyModules[academyIndex];
+  const completed = state.academyModules.filter(Boolean).length;
+  elements.academyCompletion.innerHTML = `<strong>${completed} / ${academyModules.length}</strong><span>Stationen bearbeitet</span>`;
+  elements.academyNumber.textContent = String(academyIndex + 1).padStart(2, "0");
+  elements.academyKicker.textContent = module.kicker;
+  elements.academyTitle.textContent = module.title;
+  elements.academyLead.textContent = module.lead;
+  elements.academyVisual.innerHTML = academyVisual(module);
+  renderAcademyBody(module);
+  renderAcademyInteraction(module);
+  renderAcademyNav();
+  elements.academyFeedback.className = "academy-feedback hidden";
+  elements.academyPrev.disabled = academyIndex === 0;
+  elements.academyNext.textContent = academyIndex === academyModules.length - 1 ? "Grundkurs abschließen" : state.academyModules[academyIndex] ? "Nächste Station" : "Station abschließen";
+}
+
+function openAcademy(targetMission = null) {
+  academyTargetMission = targetMission;
+  const firstIncomplete = state.academyModules.findIndex((done) => !done);
+  academyIndex = firstIncomplete === -1 ? 0 : firstIncomplete;
+  initializeAcademyInteraction(academyModules[academyIndex], state.academyModules[academyIndex]);
+  elements.prologue.classList.add("hidden");
+  elements.hero.classList.add("hidden");
+  elements.mission.classList.add("hidden");
+  elements.academy.classList.remove("hidden");
+  renderAcademy();
+  renderNav();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function advanceAcademy() {
+  const module = academyModules[academyIndex];
+  if (!state.academyModules[academyIndex] && !academyRequirementMet(module)) {
+    const instruction = module.id === "diagnostics" ? "Löse zuerst alle drei Checkpointfragen." : "Arbeite zuerst alle interaktiven Elemente dieser Station durch.";
+    showAcademyFeedback(instruction, "error");
+    return;
+  }
+  state.academyModules[academyIndex] = true;
+  if (academyIndex === academyModules.length - 1) {
+    state.layerCourseComplete = true;
+    saveState();
+    renderNav();
+    const target = academyTargetMission;
+    academyTargetMission = null;
+    if (target !== null) openMission(target);
+    else showHero();
+    return;
+  }
+  saveState();
+  academyIndex += 1;
+  initializeAcademyInteraction(academyModules[academyIndex], state.academyModules[academyIndex]);
+  renderAcademy();
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 function start(mode) {
@@ -703,11 +1109,16 @@ function prepareInteraction(mission, completed) {
 function openMission(index) {
   if (!state.mode) state.mode = "guided";
   if (!canOpen(index)) return;
+  if (index >= 4 && !state.layerCourseComplete) {
+    openAcademy(index);
+    return;
+  }
   state.current = index;
   saveState();
   activeIntel = "log";
   prepareInteraction(missions[index], state.complete[index]);
   elements.prologue.classList.add("hidden");
+  elements.academy.classList.add("hidden");
   elements.hero.classList.add("hidden");
   elements.mission.classList.remove("hidden");
   renderMission();
@@ -1113,6 +1524,7 @@ function resetGame() {
 
 $("#guided-start").addEventListener("click", () => start("guided"));
 $("#expert-start").addEventListener("click", () => start("expert"));
+$("#layer-course-button").addEventListener("click", () => openAcademy(null));
 $("#replay-prologue").addEventListener("click", showPrologue);
 $("#scene-back").addEventListener("click", () => {
   sceneIndex = Math.max(0, sceneIndex - 1);
@@ -1128,6 +1540,15 @@ $("#scene-next").addEventListener("click", () => {
 $("#scene-skip").addEventListener("click", finishPrologue);
 $("#brand-button").addEventListener("click", showHero);
 $("#back-to-map").addEventListener("click", showHero);
+$("#academy-back-to-map").addEventListener("click", showHero);
+$("#academy-next").addEventListener("click", advanceAcademy);
+$("#academy-prev").addEventListener("click", () => {
+  if (academyIndex === 0) return;
+  academyIndex -= 1;
+  initializeAcademyInteraction(academyModules[academyIndex], state.academyModules[academyIndex]);
+  renderAcademy();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
 $("#reset-button").addEventListener("click", resetGame);
 $("#lesson-confirm").addEventListener("click", confirmLesson);
 $("#check-button").addEventListener("click", checkAnswer);

@@ -105,6 +105,7 @@
                   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
                 </button>
                 <button class="secondary-button" id="expert-start" type="button">Fortgeschrittenenroute öffnen</button>
+                <button class="secondary-button" id="layer-course-button" type="button">Grundkurs Schichtenmodell</button>
                 <button class="text-button" id="replay-prologue" type="button">Prolog erneut ansehen</button>
               </div>
               <p class="route-note">Beide Routen enthalten dieselben Fachinhalte. Kein Zeitlimit, keine Note: Ausprobieren und Hinweise nutzen gehört zur Mission.</p>
@@ -133,6 +134,43 @@
                 <div class="robot-readout"><span>STATE</span><strong>RUNAWAY</strong></div>
               </div>
             </div>
+          </section>
+
+          <section class="academy hidden" id="academy-view" aria-live="polite">
+            <div class="academy-topline">
+              <button class="back-button" id="academy-back-to-map" type="button">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+                Einsatzübersicht
+              </button>
+              <span class="academy-status" id="academy-status">GRUNDKURS · SCHICHTENMODELL</span>
+            </div>
+
+            <header class="academy-heading">
+              <div>
+                <p class="eyebrow"><span></span> Netzwerk-Akademie</p>
+                <h1>Vom Chatbefehl bis zum Funksignal</h1>
+                <p>Arbeite dich durch sieben Lernstationen. Jede Station beantwortet eine andere Frage, die du später in den Missionen brauchst.</p>
+              </div>
+              <div class="academy-completion" id="academy-completion"><strong>0 / 7</strong><span>Stationen bearbeitet</span></div>
+            </header>
+
+            <nav class="academy-nav" id="academy-nav" aria-label="Lernstationen"></nav>
+
+            <article class="academy-card">
+              <div class="academy-card-head">
+                <span class="academy-module-number" id="academy-module-number">01</span>
+                <div><p id="academy-kicker"></p><h2 id="academy-title"></h2></div>
+              </div>
+              <p class="academy-lead" id="academy-lead"></p>
+              <div class="academy-visual" id="academy-visual"></div>
+              <div class="academy-body" id="academy-body"></div>
+              <div class="academy-interaction" id="academy-interaction"></div>
+              <div class="academy-feedback hidden" id="academy-feedback" role="status"></div>
+              <footer class="academy-actions">
+                <button class="secondary-button" id="academy-prev" type="button">Vorherige Station</button>
+                <button class="primary-button" id="academy-next" type="button">Station abschließen</button>
+              </footer>
+            </article>
           </section>
 
           <section class="mission-view hidden" id="mission-view" aria-live="polite">
